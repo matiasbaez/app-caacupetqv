@@ -1,0 +1,7 @@
+[
+    {"icon": "home", "name": "Plantas", "redirectTo": "/home", "admin": false, "loggedIn": false},
+    {"icon": "cog", "name": "Administración", "redirectTo": "/register-plant", "admin": true, "loggedIn": true},
+    {"icon": "person", "name": "Perfil", "redirectTo": "/register-zone", "admin": false, "loggedIn": true},
+    {"icon": "logo-usd", "name": "Donación", "redirectTo": "/register-plant", "admin": false, "loggedIn": true},
+    {"icon": "exit", "name": "Salir", "redirectTo": "/home", "admin": false, "loggedIn": true }
+]

@@ -9,4 +9,7 @@ export class HomePage {
 
   constructor() {}
 
+  segmentChanged(event) {
+    console.log("event: ", event.detail.value);
+  }
 }

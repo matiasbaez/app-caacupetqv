@@ -1,5 +1,7 @@
 {
   "name": "app-caacupetqv",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

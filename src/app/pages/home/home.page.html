@@ -1,0 +1,40 @@
+<app-header></app-header>
+
+<ion-toolbar color="primary">
+  <ion-segment (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="mision">
+      <ion-icon name="hammer"></ion-icon>
+      <ion-label>Misión</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="vision">
+      <ion-icon name="trending-up"></ion-icon>
+      <ion-label>Visión</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="contacto">
+      <ion-icon name="contacts"></ion-icon>
+      <ion-label >Contacto</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-searchbar placeholder="Buscar planta..." (ionChange)="onSearchChange($event)" [debounce]="250"></ion-searchbar>
+</ion-toolbar>
+
+
+<ion-content>
+  
+  <ion-card *ngFor="let item of [1,1,1,1,1,1,1,1]" mode="ios">
+    <ion-img src="/assets/img/plant.jpg"></ion-img>
+    <ion-item>
+      <ion-icon name="pin" slot="start"></ion-icon>
+      <ion-label>Nombre de la Planta</ion-label>
+      <!-- <ion-button fill="outline" slot="end">View</ion-button> -->
+    </ion-item>
+  
+    <ion-card-content>
+      This is content, without any paragraph or header tags,
+      within an ion-card-content element.
+    </ion-card-content>
+  </ion-card>
+
+
+</ion-content>
+
