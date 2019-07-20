@@ -1,7 +1,11 @@
 [
-    {"icon": "home", "name": "Plantas", "redirectTo": "/home", "admin": false, "loggedIn": false},
+    {"icon": "home", "name": "Plantas", "redirectTo": "/tabs/home", "admin": false, "loggedIn": false},
+    {"icon": "ios-leaf", "name": "Mis Plantas", "redirectTo": "/mision", "admin": false, "loggedIn": false},
+    {"icon": "hammer", "name": "Misión", "redirectTo": "/mision", "admin": false, "loggedIn": false},
+    {"icon": "trending-up", "name": "Visión", "redirectTo": "/vision", "admin": false, "loggedIn": false},
     {"icon": "cog", "name": "Administración", "redirectTo": "/register-plant", "admin": true, "loggedIn": true},
     {"icon": "person", "name": "Perfil", "redirectTo": "/register-zone", "admin": false, "loggedIn": true},
-    {"icon": "logo-usd", "name": "Donación", "redirectTo": "/register-plant", "admin": false, "loggedIn": true},
+    {"icon": "heart", "name": "Donar", "redirectTo": "/register-plant", "admin": false, "loggedIn": true},
+    {"icon": "information-circle-outline", "name": "Acerca de", "redirectTo": "/about", "admin": false, "loggedIn": false },
     {"icon": "exit", "name": "Salir", "redirectTo": "/home", "admin": false, "loggedIn": true }
 ]

@@ -1,0 +1,25 @@
+ion-list {
+    margin: 25px 0;
+    background: inherit;
+}
+
+.item-has-focus .label-floating {
+    color: inherit !important;
+}
+
+ion-item.item-has-focus {
+    border-bottom: 1px solid #fff;
+}
+
+#signIn {
+    margin-bottom: 25px;
+}
+
+a {
+    color: #fff;
+}
+
+.social {
+    text-align: center;
+    font-size: 40px !important;
+}
