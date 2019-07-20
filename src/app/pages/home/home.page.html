@@ -1,23 +1,18 @@
-<app-header></app-header>
+<ion-header no-border translucent>
+  <ion-toolbar color="primary">
+
+    <ion-buttons slot="start" color="primary">
+      <ion-menu-button menu="mainMenu"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>#CAACUPETQV</ion-title>
+
+  </ion-toolbar>
+</ion-header>
 
 <ion-toolbar color="primary">
-  <ion-segment (ionChange)="segmentChanged($event)">
-    <ion-segment-button value="mision">
-      <ion-icon name="hammer"></ion-icon>
-      <ion-label>Misión</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="vision">
-      <ion-icon name="trending-up"></ion-icon>
-      <ion-label>Visión</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="contacto">
-      <ion-icon name="contacts"></ion-icon>
-      <ion-label >Contacto</ion-label>
-    </ion-segment-button>
-  </ion-segment>
   <ion-searchbar placeholder="Buscar planta..." (ionChange)="onSearchChange($event)" [debounce]="250"></ion-searchbar>
 </ion-toolbar>
-
 
 <ion-content>
   

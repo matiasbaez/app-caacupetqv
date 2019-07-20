@@ -12,4 +12,8 @@ export class HomePage {
   segmentChanged(event) {
     console.log("event: ", event.detail.value);
   }
+
+  onSearchChange(event) {
+    
+  }
 }
