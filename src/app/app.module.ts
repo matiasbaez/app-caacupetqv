@@ -9,7 +9,9 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
+import { IonicStorageModule } from '@ionic/storage';
 import { ComponentsModule } from './components/components.module';
+import { PipesModule } from './pipes/pipes.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -17,9 +19,14 @@ import { ComponentsModule } from './components/components.module';
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
+    IonicStorageModule.forRoot({
+      name: '__caacupetqv',
+      driverOrder: ['sqlite', 'websql', 'localstorage', 'indexeddb']
+    }),
     AppRoutingModule,
     HttpClientModule,
-    ComponentsModule
+    ComponentsModule,
+    PipesModule
   ],
   providers: [
     StatusBar,

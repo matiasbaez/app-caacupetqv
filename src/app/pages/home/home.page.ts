@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { DataService } from '../../services/data.service';
+import { Plant } from '../../interfaces/interfaces';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'app-home',
@@ -7,13 +12,19 @@ import { Component } from '@angular/core';
 })
 export class HomePage {
 
-  constructor() {}
+  public plants: Observable<Plant>;
+  public imageUrl: any = environment.imageUrl;
 
-  segmentChanged(event) {
-    console.log("event: ", event.detail.value);
+  constructor(
+    private dataService: DataService
+  ) {
+    this.loadData();
   }
 
   onSearchChange(event) {
-    
+  }
+
+  loadData() {
+    this.plants = this.dataService.getPlants();
   }
 }

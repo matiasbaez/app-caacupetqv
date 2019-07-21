@@ -7,15 +7,15 @@
       <ion-label>Inicio</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button (click)="loginPage()">
+    <ion-tab-button (click)="loginPage()" *ngIf="!logged">
       <ion-icon name="person"></ion-icon>
       <ion-label>Login</ion-label>
     </ion-tab-button>
 
-    <!-- <ion-tab-button tab="tab3">
+    <ion-tab-button tab="profile" *ngIf="logged">
       <ion-icon name="person"></ion-icon>
       <ion-label>Perfil</ion-label>
-    </ion-tab-button> -->
+    </ion-tab-button>
 
     <ion-tab-button tab="tab4">
       <ion-icon name="heart"></ion-icon>

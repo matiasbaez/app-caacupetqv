@@ -16,19 +16,33 @@
 
 <ion-content>
   
-  <ion-card *ngFor="let item of [1,1,1,1,1,1,1,1]" mode="ios">
-    <ion-img src="/assets/img/plant.jpg"></ion-img>
+  <ion-card *ngFor="let plant of plants | async" mode="ios">
+    <ion-img [src]="plant.imagen | absolutize"></ion-img>
     <ion-item>
-      <ion-icon name="pin" slot="start"></ion-icon>
-      <ion-label>Nombre de la Planta</ion-label>
+      <!-- <ion-icon name="pin" slot="start"></ion-icon> -->
+      <ion-label>{{ plant.nombre }}</ion-label>
       <!-- <ion-button fill="outline" slot="end">View</ion-button> -->
     </ion-item>
   
-    <ion-card-content>
-      This is content, without any paragraph or header tags,
-      within an ion-card-content element.
-    </ion-card-content>
+    <ion-card-content>{{ plant.descripcion }}</ion-card-content>
   </ion-card>
+
+  <div *ngIf="(plants | async) === null">
+    <ion-card *ngFor="let item of [1,1,1]" mode="ios">
+      <ion-skeleton-text style="width: 100%; height: 150px;"></ion-skeleton-text>
+      <ion-item>
+        <!-- <ion-icon name="pin" slot="start"></ion-icon> -->
+        <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+        <!-- <ion-button fill="outline" slot="end">View</ion-button> -->
+      </ion-item>
+    
+      <ion-card-content>
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
 
 </ion-content>

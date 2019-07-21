@@ -2,7 +2,7 @@
   <ion-toolbar color="primary">
 
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/" (click)="enableMenu()"></ion-back-button>
+      <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
 
   </ion-toolbar>
@@ -10,22 +10,22 @@
 
 <ion-content padding color="primary">
   <ion-img src="/assets/img/logo.png"></ion-img>
-  <form (ngSubmit)="onSubmit()" padding color="primary">
+  <form (ngSubmit)="onSubmit()" [formGroup]="angForm" padding color="primary">
     <ion-list>
       <ion-item color="primary">
         <ion-label position="floating">Email:</ion-label>
         <ion-input type="email"
                     pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
-                    required>
+                    required formControlName="email">
         </ion-input>
       </ion-item>
       <ion-item color="primary">
         <ion-label position="floating">Contraseña:</ion-label>
-        <ion-input type="password"></ion-input>
+        <ion-input type="password" formControlName="password"></ion-input>
       </ion-item>
     </ion-list>
 
-    <ion-button id="signIn" color="light" expand="block" size="large" fill="outline" type="submit">Iniciar</ion-button>
+    <ion-button id="signIn" color="light" expand="block" size="large" fill="outline" type="submit" [disabled]="angForm.invalid">Iniciar</ion-button>
 
     <ion-label>No tienes una cuenta ? <a routerLink="#">Registrate</a></ion-label>
   </form>
