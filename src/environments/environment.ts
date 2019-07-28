@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  api: 'http://caacupetqv.com.devel/api',
-  imageUrl: 'http://caacupetqv.com.devel/api/images/'
+  api: 'http://localhost:8000/api',
+  imageUrl: 'http://localhost:8000/api/images/'
 };

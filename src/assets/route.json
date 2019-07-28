@@ -1,11 +1,10 @@
 [
-    {"icon": "home", "name": "Plantas", "redirectTo": "/tabs/home", "admin": false, "loggedIn": false},
-    {"icon": "ios-leaf", "name": "Mis Plantas", "redirectTo": "/mision", "admin": false, "loggedIn": true},
-    {"icon": "hammer", "name": "Misión", "redirectTo": "/mision", "admin": false, "loggedIn": false},
-    {"icon": "trending-up", "name": "Visión", "redirectTo": "/vision", "admin": false, "loggedIn": false},
-    {"icon": "cog", "name": "Administración", "redirectTo": "/register-plant", "admin": true, "loggedIn": true},
-    {"icon": "person", "name": "Perfil", "redirectTo": "/tabs/profile", "admin": false, "loggedIn": true},
-    {"icon": "heart", "name": "Donar", "redirectTo": "/register-plant", "admin": false, "loggedIn": false},
+    {"icon": "home", "name": "Plantas", "redirectTo": "/main/home", "admin": false, "loggedIn": false},
+    {"icon": "ios-leaf", "name": "Mis Plantas", "redirectTo": "/my-plants", "admin": false, "loggedIn": true},
+    {"icon": "bookmark", "name": "Misión | Visión", "redirectTo": "/mision-vision", "admin": false, "loggedIn": false},
+    {"icon": "settings", "name": "Administración", "redirectTo": "/admin", "admin": true, "loggedIn": true},
+    {"icon": "person", "name": "Perfil", "redirectTo": "/main/profile", "admin": false, "loggedIn": true},
+    {"icon": "heart", "name": "Donar", "redirectTo": "/donate", "admin": false, "loggedIn": false},
     {"icon": "information-circle-outline", "name": "Acerca de", "redirectTo": "/about", "admin": false, "loggedIn": false },
-    {"icon": "exit", "name": "Salir", "redirectTo": "/home", "admin": false, "loggedIn": true }
+    {"icon": "exit", "name": "Salir", "redirectTo": "/main/home", "admin": false, "loggedIn": true }
 ]
