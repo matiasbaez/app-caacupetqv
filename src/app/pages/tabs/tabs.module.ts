@@ -15,6 +15,7 @@ const routes: Routes = [
     children: [
       { path: 'home', loadChildren: '../home/home.module#HomePageModule' },
       { path: 'profile', loadChildren: '../profile/profile.module#ProfilePageModule' },
+      { path: 'donate', loadChildren: '../donate/donate.module#DonatePageModule' },
     ]
   }
 ];

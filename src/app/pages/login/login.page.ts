@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController, AlertController } from '@ionic/angular';
+import { MenuController } from '@ionic/angular';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { DataService } from '../../services/data.service';
-import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import { UIService } from '../../services/ui.service';
 
 @Component({
   selector: 'app-login',
@@ -15,12 +15,11 @@ export class LoginPage implements OnInit {
   angForm: FormGroup;
 
   constructor(
-    private menuCtrl: MenuController,
     private fb: FormBuilder,
-    private dataService: DataService,
-    private storage: Storage,
-    private alertCtrl: AlertController,
-    private router: Router
+    private router: Router,
+    private uiService: UIService,
+    private menuCtrl: MenuController,
+    private userService: UserService,
   ) {
     this.menuCtrl.enable(false);
     this.createForm();
@@ -36,22 +35,17 @@ export class LoginPage implements OnInit {
     });
   }
 
-  onSubmit() {
-    this.dataService.login(this.angForm.value).subscribe(
-      (response: any) => {
-        this.storage.set('token', response.token);
-        this.router.navigate(['/']);
-      },
-      async (error) => {
-        console.log('Error: ', error);
-        const alert = await this.alertCtrl.create({
-          header: 'ATENCIÓN',
-          message: 'El email y/o la contraseña no son correctas.',
-          buttons: ['OK']
-        });
-        await alert.present();
-      }
-    );
+  async onSubmit() {
+    const logged = await this.userService.login(this.angForm.value);
+    if (logged) {
+      this.router.navigate(['/']);
+    } else {
+      this.uiService.showAlert('El email y/o contraseña no son correctas');
+    }
+  }
+
+  googleLogin() {
+    this.userService.googleLogin();
   }
 
   ionViewDidLeave() {

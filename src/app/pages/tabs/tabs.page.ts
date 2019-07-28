@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
-import { DataService } from 'src/app/services/data.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-tabs',
@@ -11,12 +11,10 @@ import { DataService } from 'src/app/services/data.service';
 export class TabsPage implements OnInit {
 
   public logged: boolean = false;
-  public user: any;
 
   constructor(
     private router: Router,
-    private storage: Storage,
-    private dataService: DataService
+    private userService: UserService
   ) {
   }
 
@@ -24,28 +22,7 @@ export class TabsPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-    await this.storage.get('token').then(token => {
-      if (token) {
-        this.logged = true;
-        this.profile();
-      }
-    }).catch(error => {
-      console.log('getToken error: ', error);
-    });
-  }
-
-  async profile() {
-    this.user = await this.storage.get('user');
-    if (!this.user) {
-      this.dataService.getProfile().subscribe(
-        (response: any) => {
-        this.storage.set('user', response.user);
-        this.user = response.user;
-      },
-      (error) => {
-        console.log('Error: ', error);
-      });
-    }
+    this.logged = await this.userService.validateToken();
   }
 
   loginPage() {

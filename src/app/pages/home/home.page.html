@@ -27,6 +27,16 @@
     <ion-card-content>{{ plant.descripcion }}</ion-card-content>
   </ion-card>
 
+  <div *ngIf="(plants | async)?.length === 0">
+    <ion-card mode="ios">
+      <ion-img src="/assets/img/logo-lg.jpg"></ion-img>
+      <ion-card-content>
+        PARECE QUE TODAVIA NO SE HA PLANTADO NADA,
+        AYUDANOS A PRESERVAR EL MEDIO AMBIENTE PLANTANDO UN ARBOLITO
+      </ion-card-content>
+    </ion-card>
+  </div>
+
   <div *ngIf="(plants | async) === null">
     <ion-card *ngFor="let item of [1,1,1]" mode="ios">
       <ion-skeleton-text style="width: 100%; height: 150px;"></ion-skeleton-text>

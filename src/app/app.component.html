@@ -10,7 +10,7 @@
         <ion-list>
   
           <ion-menu-toggle autoHide="false" *ngFor="let item of menuItems | async">
-            <ion-item [routerLink]="item.redirectTo" [ngClass]="{'hidden': (item.loggedIn && !logged)}">
+            <ion-item [routerLink]="item.redirectTo" [ngClass]="{'hidden': (item.loggedIn && !logged || (logged && item.admin && user && user.role.flag != 'a'))}">
               <ion-icon slot="start" [name]="item.icon" color="primary"></ion-icon>
               <ion-label>{{ item.name }}</ion-label>
             </ion-item>

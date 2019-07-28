@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { DataService } from './services/data.service';
 import { Observable } from 'rxjs';
 import { Storage } from '@ionic/storage';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -17,14 +18,13 @@ export class AppComponent {
   public user;
   public logged: boolean = false;
 
-  private token;
-
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private dataService: DataService,
-    private storage: Storage
+    private storage: Storage,
+    private userService: UserService
   ) {
     this.initializeApp();
   }
@@ -33,36 +33,24 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.getToken();
+      this.userData();
       this.menuItems = this.dataService.getMenuItems();
     });
   }
 
-  async getToken() {
-    await this.storage.get('token').then(token => {
-      if (token) {
-        this.logged = true;
-        this.profile();
-      }
-    }).catch(error => {
-      console.log('getToken error: ', error);
+  async userData() {
+    this.logged = await this.userService.validateToken();
+    if (this.logged) {
+      this.user = await this.userService.getUser();
+    }
+    this.userService.emmitter.subscribe(user => {
+      this.user = user;
+      this.logged = (user) ? true : false;
+      console.log('USER: ', user, 'logged: ', this.logged);
+    },
+    err => {
+      console.log('Error: ', err);
+      this.logged = false;
     });
-  }
-
-  async profile() {
-    this.user = await this.storage.get('user');
-    if (!this.user) {
-      this.dataService.getProfile().subscribe(
-        (response: any) => {
-          console.log('response: ', response);
-          this.storage.set('user', response.user);
-          this.user = response.user;
-          this.logged = true;
-        },
-        (error) => {
-          console.log('Error: ', error);
-          this.logged = false;
-        });
-    } else this.logged = true;
   }
 }
