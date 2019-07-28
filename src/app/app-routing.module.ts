@@ -8,8 +8,8 @@ const routes: Routes = [
   { path: 'about', loadChildren: './pages/about/about.module#AboutPageModule' },
   { path: 'mision-vision', loadChildren: './pages/mision-vision/mision-vision.module#MisionVisionPageModule' },
   { path: 'publications', loadChildren: './pages/publications/publications.module#PublicationsPageModule' },
-  { path: 'admin', loadChildren: './pages/admin/navigation/navigation.module#NavigationPageModule' },
   { path: 'donate', loadChildren: './pages/donate/donate.module#DonatePageModule' },
+  { path: 'admin', loadChildren: './pages/admin/navigation/navigation.module#NavigationPageModule' },
 ];
 
 @NgModule({

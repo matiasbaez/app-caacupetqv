@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Role } from '../../../interfaces/interfaces';
 
 @Component({
   selector: 'app-roles',
@@ -7,21 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RolesPage implements OnInit {
 
+  roles: Role[] = [];
+
   constructor() { }
 
   ngOnInit() {
   }
 
   onSearchChange(event) {
-
   }
 
-  edit() {
-
-  }
-
-  delete() {
-
-  }
+  addRole() {}
 
 }

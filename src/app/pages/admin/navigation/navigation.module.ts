@@ -13,7 +13,7 @@ const routes: Routes = [
     path: '',
     component: NavigationPage,
     children: [
-      { path: 'plants', loadChildren: '../plant/plant.module#PlantPageModule'},
+      { path: 'plants', loadChildren: '../plants/plants.module#PlantsPageModule'},
       { path: 'zones', loadChildren: '../zones/zones.module#ZonesPageModule'},
       { path: 'users', loadChildren: '../users/users.module#UsersPageModule'},
       { path: 'roles', loadChildren: '../roles/roles.module#RolesPageModule'},

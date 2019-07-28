@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Zone } from '../../../interfaces/interfaces';
 
 @Component({
   selector: 'app-zones',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./zones.page.scss'],
 })
 export class ZonesPage implements OnInit {
+
+   zones: Zone[] = [];
 
   constructor() { }
 
@@ -16,12 +19,6 @@ export class ZonesPage implements OnInit {
 
   }
 
-  edit(zone) {
-
-  }
-
-  delete(zone) {
-
-  }
+  addZone() {}
 
 }

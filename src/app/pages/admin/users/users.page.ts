@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from '../../../interfaces/interfaces';
 
 @Component({
   selector: 'app-users',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UsersPage implements OnInit {
 
+  users: User[] = [];
+
   constructor() { }
 
   ngOnInit() {
   }
+
+  onSearchChange(event) {}
+
+  addUser() {}
 
 }

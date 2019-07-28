@@ -23,7 +23,7 @@ export interface Plant {
     estado: number;
 }
 
-export interface Zones {
+export interface Zone {
     idZona: string;
     nombre: string;
     estado: number;

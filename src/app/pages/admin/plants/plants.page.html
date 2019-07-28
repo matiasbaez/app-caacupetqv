@@ -1,19 +1,19 @@
 <app-header></app-header>
 
 <ion-toolbar color="primary">
-  <ion-searchbar placeholder="Buscar role..." (ionChange)="onSearchChange($event)" [debounce]="250"></ion-searchbar>
+  <ion-searchbar placeholder="Buscar planta..." (ionChange)="onSearchChange($event)" [debounce]="250"></ion-searchbar>
 </ion-toolbar>
 
 <ion-content padding>
 
   <ion-list>
-    <ion-item-sliding *ngFor="let role of roles">
-      <app-role [role]="role"></app-role>
+    <ion-item-sliding *ngFor="let plant of plants">
+      <app-plant [plant]="plant"></app-plant>
     </ion-item-sliding>
   </ion-list>
-  
+
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="addRole()">
+    <ion-fab-button (click)="addPlant()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
