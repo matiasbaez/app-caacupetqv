@@ -1,0 +1,39 @@
+<app-header></app-header>
+
+<ion-toolbar color="primary">
+  <ion-searchbar placeholder="Buscar zona>..." (ionChange)="onSearchChange($event)" [debounce]="250"></ion-searchbar>
+</ion-toolbar>
+
+<ion-content padding>
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of [1,1,1,1,1,1]">
+      <ion-item-options side="start">
+        <ion-item-option (click)="edit(item)">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+
+      <ion-item>
+        <ion-icon slot="start" name="business"></ion-icon>
+        <ion-label>
+          <h3>Barrio lorem ipsum</h3>
+        </ion-label>
+        <ion-label slot="end" text-right>Disponible</ion-label>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option (click)="delete(item)" color="danger">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
