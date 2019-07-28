@@ -9,13 +9,13 @@
     <img src="/assets/img/plant.jpg" alt="">
   </ion-avatar>
   <ion-label>
-    <h3>Nombre Planta</h3>
-    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Animi, enim?</p>
+    <h3>{{ plant.nombre }}</h3>
+    <p>{{ plant.descripcion }}</p>
   </ion-label>
 </ion-item>
 
 <ion-item-options side="end">
-  <ion-item-option (click)="deletePlant(plant)" color="danger">
+  <ion-item-option (click)="deletePlant(plant.idPlanta)" color="danger">
     <ion-icon slot="icon-only" name="trash"></ion-icon>
   </ion-item-option>
 </ion-item-options>

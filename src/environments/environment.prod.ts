@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  api: 'http://localhost:8000/api',
+  imageUrl: 'http://localhost:8000/api/images/'
 };

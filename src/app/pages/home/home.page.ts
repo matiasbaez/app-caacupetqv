@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { DataService } from '../../services/data.service';
 import { Plant } from '../../interfaces/interfaces';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { PlantsService } from '../../services/plants.service';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class HomePage {
   public imageUrl: any = environment.imageUrl;
 
   constructor(
-    private dataService: DataService
+    private plantsService: PlantsService
   ) {
     this.loadData();
   }
@@ -25,6 +25,6 @@ export class HomePage {
   }
 
   loadData() {
-    this.plants = this.dataService.getPlants();
+    this.plants = this.plantsService.getPlants();
   }
 }

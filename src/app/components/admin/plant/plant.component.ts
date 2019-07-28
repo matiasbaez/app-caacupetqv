@@ -1,5 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Plant } from '../../../interfaces/interfaces';
+import { PlantsService } from '../../../services/plants.service';
+import { UIService } from 'src/app/services/ui.service';
 
 @Component({
   selector: 'app-plant',
@@ -9,13 +11,28 @@ import { Plant } from '../../../interfaces/interfaces';
 export class PlantComponent implements OnInit {
 
   @Input() plant: Plant;
+  @Output() edit: EventEmitter<any> = new EventEmitter();
 
-  constructor() { }
+  constructor(
+    private plantsService: PlantsService,
+    private uiService: UIService
+  ) { }
 
   ngOnInit() {}
 
-  editPlant(plant) {}
+  editPlant(plant) {
+    this.edit.emit(plant);
+  }
 
-  deletePlant(plant) {}
+  async deletePlant(plantId) {
+    const deleted = await this.plantsService.deletePlant(plantId);
+    let message;
+    if (deleted) {
+      message = 'La planta ha sido eliminada';
+    } else {
+      message = 'Ha ocurrido un error, por favor intentelo más tarde';
+    }
+    this.uiService.showToast(message);
+  }
 
 }

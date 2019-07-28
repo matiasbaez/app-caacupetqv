@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 export class AbsolutizePipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
-    if (!value) { return '/assets/img/logo-2.jpg'; }
+    if (!value) { return '/assets/img/logo-lg.jpg'; }
 
     return environment.imageUrl + '/' + value;
   }
