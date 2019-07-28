@@ -96,7 +96,7 @@ export class UserService {
     console.log('VALIDATE TOKEN');
     await this.loadToken();
     if (!this.token) {
-      this.navCtrl.navigateRoot('/tabs/home');
+      this.navCtrl.navigateRoot('/main/home');
       return Promise.resolve(false);
     }
 
