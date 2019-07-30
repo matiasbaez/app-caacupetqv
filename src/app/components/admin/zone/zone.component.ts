@@ -1,5 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Zone } from '../../../interfaces/interfaces';
+import { ZonesService } from '../../../services/zones.service';
+import { UIService } from '../../../services/ui.service';
 
 @Component({
   selector: 'app-zone',
@@ -9,13 +11,28 @@ import { Zone } from '../../../interfaces/interfaces';
 export class ZoneComponent implements OnInit {
 
   @Input() zone: Zone;
+  @Output() edit: EventEmitter<any> = new EventEmitter();
 
-  constructor() { }
+  constructor(
+    private zonesService: ZonesService,
+    private uiService: UIService
+  ) { }
 
   ngOnInit() {}
 
-  editZone() {}
+  editZone(zone) {
+    this.edit.emit(zone);
+  }
 
-  deleteZone() {}
+  async deleteZone(zoneId) {
+    const deleted = await this.zonesService.deleteZone(zoneId);
+    let message;
+    if (deleted) {
+      message = 'La zona ha sido eliminada';
+    } else {
+      message = 'Ha ocurrido un error, por favor intentelo más tarde';
+    }
+    this.uiService.showToast(message);
+  }
 
 }

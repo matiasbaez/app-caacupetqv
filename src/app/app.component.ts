@@ -46,7 +46,6 @@ export class AppComponent {
     this.userService.emmitter.subscribe(user => {
       this.user = user;
       this.logged = (user) ? true : false;
-      console.log('USER: ', user, 'logged: ', this.logged);
     },
     err => {
       console.log('Error: ', err);

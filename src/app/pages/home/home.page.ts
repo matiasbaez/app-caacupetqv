@@ -12,7 +12,7 @@ import { PlantsService } from '../../services/plants.service';
 })
 export class HomePage {
 
-  public plants: Observable<Plant>;
+  public plants: Plant[] = [];
   public imageUrl: any = environment.imageUrl;
 
   constructor(
@@ -25,6 +25,13 @@ export class HomePage {
   }
 
   loadData() {
-    this.plants = this.plantsService.getPlants();
+    this.plantsService.getPlants().subscribe(
+      (response: any) => {
+        this.plants = response.data;
+      },
+      (error) => {
+        console.log('Error: ', error);
+      }
+    );;
   }
 }

@@ -16,7 +16,7 @@
 
 <ion-content>
   
-  <ion-card *ngFor="let plant of plants | async" mode="ios">
+  <ion-card *ngFor="let plant of plants" mode="ios">
     <ion-img [src]="plant.imagen | absolutize"></ion-img>
     <ion-item>
       <!-- <ion-icon name="pin" slot="start"></ion-icon> -->
@@ -27,7 +27,7 @@
     <ion-card-content>{{ plant.descripcion }}</ion-card-content>
   </ion-card>
 
-  <div *ngIf="(plants | async)?.length === 0">
+  <div *ngIf="plants?.length === 0">
     <ion-card mode="ios">
       <ion-img src="/assets/img/logo-lg.jpg"></ion-img>
       <ion-card-content>
@@ -37,7 +37,7 @@
     </ion-card>
   </div>
 
-  <div *ngIf="(plants | async) === null">
+  <div *ngIf="plants === null">
     <ion-card *ngFor="let item of [1,1,1]" mode="ios">
       <ion-skeleton-text style="width: 100%; height: 150px;"></ion-skeleton-text>
       <ion-item>

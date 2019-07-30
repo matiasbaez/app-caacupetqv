@@ -88,14 +88,7 @@ export class UserService {
   getUserList() {
     const headers = new HttpHeaders()
       .set('Authorization', 'Bearer' + this.token);
-    return this.http.get(`${API}/user/list`, {headers}).subscribe(
-      (response) => {
-        console.log('response: ', response);
-      },
-      (error) => {
-        console.log('Error: ', error);
-      }
-    );
+    return this.http.get<User>(`${API}/user/list`, {headers});
   }
 
   validateEmail(email: string) {

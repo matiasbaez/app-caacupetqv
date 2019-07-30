@@ -17,7 +17,9 @@ export class PublicationsService {
   ) { }
 
   getPublications() {
-    return this.http.get<Publications>(`${API}/publicaciones`);
+    const headers = new HttpHeaders()
+      .set('Authorization', 'Bearer ' + this.userService.token);
+    return this.http.get<Publications>(`${API}/publicaciones`, {headers});
   }
 
   addPublication(data: Publications) {

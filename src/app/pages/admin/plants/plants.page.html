@@ -7,7 +7,7 @@
 <ion-content padding>
 
   <ion-list *ngIf="!showForm">
-    <ion-item-sliding *ngFor="let plant of plants | async">
+    <ion-item-sliding *ngFor="let plant of plants">
       <app-plant [plant]="plant" (edit)="editPlant($event)"></app-plant>
     </ion-item-sliding>
   </ion-list>

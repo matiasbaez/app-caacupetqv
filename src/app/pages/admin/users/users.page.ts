@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../../interfaces/interfaces';
+import { UserService } from '../../../services/user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -10,9 +12,19 @@ export class UsersPage implements OnInit {
 
   users: User[] = [];
 
-  constructor() { }
+  constructor(
+    private userService: UserService
+  ) { }
 
   ngOnInit() {
+    this.userService.getUserList().subscribe(
+      (response: any) => {
+        this.users = response.data;
+      },
+      (error) => {
+        console.log('Error: ', error);
+      }
+    );
   }
 
   onSearchChange(event) {}

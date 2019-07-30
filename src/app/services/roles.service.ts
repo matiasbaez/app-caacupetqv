@@ -17,7 +17,9 @@ export class RolesService {
   ) { }
 
   getRoles() {
-    return this.http.get<Role>(`${API}/roles`);
+    const headers = new HttpHeaders()
+      .set('Authorization', 'Bearer ' + this.userService.token);
+    return this.http.get<Role>(`${API}/roles`, {headers});
   }
 
   addRole(data: Role) {

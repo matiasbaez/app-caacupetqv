@@ -17,7 +17,9 @@ export class ZonesService {
   ) { }
 
   getZones() {
-    return this.http.get<Zone>(`${API}/zonas`);
+    const headers = new HttpHeaders()
+      .set('Authorization', 'Bearer ' + this.userService.token);
+    return this.http.get<Zone>(`${API}/zonas`, {headers});
   }
 
   addZone(data: Zone) {

@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PlantsService } from '../../../services/plants.service';
 import { Plant } from '../../../interfaces/interfaces';
 import { UIService } from '../../../services/ui.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-plants',
@@ -13,7 +12,7 @@ import { Observable } from 'rxjs';
 export class PlantsPage implements OnInit {
 
   angForm: FormGroup;
-  plants: Observable<Plant>;
+  plants: Plant[] = [];
   showForm: boolean = false;
   update: boolean = false;
 
@@ -26,7 +25,14 @@ export class PlantsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.plants = this.plantsService.getPlants();
+    this.plantsService.getPlants().subscribe(
+      (response: any) => {
+        this.plants = response.data;
+      },
+      (error) => {
+        console.log('Error: ', error);
+      }
+    );
   }
 
   createForm() {
