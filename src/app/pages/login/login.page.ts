@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MenuController, IonSlides } from '@ionic/angular';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -12,7 +12,13 @@ import { UIService } from '../../services/ui.service';
 })
 export class LoginPage implements OnInit {
 
-  angForm: FormGroup;
+  angFormLogin: FormGroup;
+  angFormRegister: FormGroup;
+  @ViewChild('slide') slide: IonSlides;
+  slideOpts = {
+    allowSlidePrev: false,
+    allowSlideNext: false
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -29,18 +35,47 @@ export class LoginPage implements OnInit {
   }
 
   createForm() {
-    this.angForm = this.fb.group({
+    this.angFormLogin = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required]
     });
+
+    this.angFormRegister = this.fb.group({
+      name: ['', Validators.required],
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+      password_confirmation: ['', Validators.required]
+    });
   }
 
-  async onSubmit() {
-    const logged = await this.userService.login(this.angForm.value);
+  async onSubmitLogin() {
+    const logged = await this.userService.login(this.angFormLogin.value);
     if (logged) {
       this.router.navigate(['/']);
     } else {
       this.uiService.showAlert('El email y/o contraseña no son correctas');
+    }
+  }
+
+  async onSubmitRegister() {
+    await this.validateEmail();
+    if (this.angFormRegister.valid) {
+      const registered = await this.userService.register(this.angFormRegister.value);
+      if (registered) {
+        this.router.navigate(['/']);
+      } else {
+        this.uiService.showAlert('No se ha podido confirmar el registro, por favor verifique los datos');
+      }
+    }
+  }
+
+  async validateEmail() {
+    const valid = await this.userService.validateEmail(this.angFormRegister.value.email);
+    if (!valid) {
+      this.uiService.showToast('El correo ya está en uso');
+      this.angFormRegister.setErrors({
+        email: true
+      });
     }
   }
 
@@ -50,5 +85,11 @@ export class LoginPage implements OnInit {
 
   ionViewDidLeave() {
     this.menuCtrl.enable(true);
+  }
+
+  moveSlide(pos) {
+    this.slide.lockSwipes(false);
+    this.slide.slideTo(pos);
+    this.slide.lockSwipes(true);
   }
 }

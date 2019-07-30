@@ -39,6 +39,7 @@ export class UserService {
           }
         },
         (error) => {
+          console.log('Error: ', error);
           resolve(false);
         }
       );
@@ -61,6 +62,7 @@ export class UserService {
         async (response: any) => {
           if (response.token) {
             await this.saveToken(response.token);
+            this.emmitter.emit(this.user);
             resolve(true);
           } else {
             this.token = null;
@@ -69,6 +71,7 @@ export class UserService {
           }
         },
         (error) => {
+          console.log('Error: ', error);
           resolve(false);
         }
       );
@@ -80,6 +83,57 @@ export class UserService {
       this.validateToken();
     }
     return { ...this.user };
+  }
+
+  getUserList() {
+    const headers = new HttpHeaders()
+      .set('Authorization', 'Bearer' + this.token);
+    return this.http.get(`${API}/user/list`, {headers}).subscribe(
+      (response) => {
+        console.log('response: ', response);
+      },
+      (error) => {
+        console.log('Error: ', error);
+      }
+    );
+  }
+
+  validateEmail(email: string) {
+    return new Promise(resolve => {
+      this.http.post(`${API}/validate/email`, {email}).subscribe(
+        (response) => {
+          if (response === 200) {
+            resolve(false);
+          } else if (response === 404) {
+            resolve(true);
+          }
+        },
+        (error) => {
+          resolve(false);
+        }
+      );
+    });
+  }
+
+  deleteUser(userId) {
+    const headers = new HttpHeaders()
+      .set('Authorization', 'Bearer' + this.token);
+    return new Promise(resolve => {
+      this.http.delete(`${API}/user/${userId}`, { headers }).subscribe(
+        (response) => {
+          console.log('response: ', response);
+          if (response === 200) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        },
+        (error) => {
+          console.log('Error: ', error);
+          resolve(false);
+        }
+      );
+    });
   }
 
   async saveToken(token: string) {

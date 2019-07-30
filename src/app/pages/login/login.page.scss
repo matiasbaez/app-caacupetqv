@@ -11,7 +11,7 @@ ion-list {
 //     border-bottom: 1px solid #fff;
 // }
 
-#signIn {
+#signIn, #signUp {
     margin-bottom: 25px;
 }
 
@@ -22,4 +22,9 @@ a {
 .social {
     text-align: center;
     font-size: 40px !important;
+}
+
+form, .social {
+    display: block;
+    width: 100% !important;
 }

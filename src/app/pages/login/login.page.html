@@ -10,27 +10,88 @@
 
 <ion-content padding color="primary">
   <ion-img src="/assets/img/logo.png"></ion-img>
-  <form (ngSubmit)="onSubmit()" [formGroup]="angForm" padding color="primary">
-    <ion-list>
-      <ion-item color="primary">
-        <ion-label position="floating">Email:</ion-label>
-        <ion-input type="email"
+  <ion-slides mode="ios" [options]="slideOpts" #slide>
+    <ion-slide>
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="12">
+            <form (ngSubmit)="onSubmitLogin()" [formGroup]="angFormLogin" padding color="primary">
+              <ion-list>
+                <ion-item color="primary">
+                  <ion-label position="floating">Email:</ion-label>
+                  <ion-input type="email"
                     pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
-                    required formControlName="email">
-        </ion-input>
-      </ion-item>
-      <ion-item color="primary">
-        <ion-label position="floating">Contraseña:</ion-label>
-        <ion-input type="password" formControlName="password"></ion-input>
-      </ion-item>
-    </ion-list>
+                    formControlName="email"
+                    required >
+                  </ion-input>
+                </ion-item>
+                <ion-item color="primary">
+                  <ion-label position="floating">Contraseña:</ion-label>
+                  <ion-input type="password" formControlName="password"></ion-input>
+                </ion-item>
+              </ion-list>
+            
+              <ion-button id="signIn" color="light" expand="block" size="large" fill="outline" type="submit" [disabled]="angFormLogin.invalid">Iniciar</ion-button>
+            
+              <ion-label>No tienes una cuenta ? <a (click)="moveSlide(1)">Registrate</a></ion-label>
+            </form>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <div class="social" padding>
+              <ion-icon name="logo-facebook"></ion-icon>
+              <ion-icon name="logo-google" (click)="googleLogin()"></ion-icon>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
 
-    <ion-button id="signIn" color="light" expand="block" size="large" fill="outline" type="submit" [disabled]="angForm.invalid">Iniciar</ion-button>
-
-    <ion-label>No tienes una cuenta ? <a routerLink="#">Registrate</a></ion-label>
-  </form>
-  <div class="social" padding>
-    <ion-icon name="logo-facebook"></ion-icon>
-    <ion-icon name="logo-google" (click)="googleLogin()"></ion-icon>
-  </div>
+    <ion-slide>
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="12">
+            <form (ngSubmit)="onSubmitRegister()" [formGroup]="angFormRegister" padding color="primary">
+              <ion-list>
+                <ion-item color="primary">
+                  <ion-label position="floating">Nombre:</ion-label>
+                  <ion-input type="text" required formControlName="name">
+                  </ion-input>
+                </ion-item>
+                <ion-item color="primary">
+                  <ion-label position="floating">Email:</ion-label>
+                  <ion-input type="email" 
+                    pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+                    formControlName="email"
+                    required (change)="validateEmail()">
+                  </ion-input>
+                </ion-item>
+                <ion-item color="primary">
+                  <ion-label position="floating">Contraseña:</ion-label>
+                  <ion-input type="password" formControlName="password"></ion-input>
+                </ion-item>
+                <ion-item color="primary">
+                  <ion-label position="floating">Confirmar ontraseña:</ion-label>
+                  <ion-input type="password" formControlName="password_confirmation"></ion-input>
+                </ion-item>
+              </ion-list>
+            
+              <ion-button id="signUp" color="light" expand="block" size="large" fill="outline" type="submit" [disabled]="angFormRegister.invalid">Registrarse</ion-button>
+            
+              <ion-label>Ya tienes una cuenta ? <a (click)="moveSlide(0)">Inicia sessión</a></ion-label>
+            </form>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <div class="social" padding>
+              <ion-icon name="logo-facebook"></ion-icon>
+              <ion-icon name="logo-google" (click)="googleLogin()"></ion-icon>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
