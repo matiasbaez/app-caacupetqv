@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Zone } from '../../../interfaces/interfaces';
+import { UIService } from '../../../services/ui.service';
+import { ZonesService } from '../../../services/zones.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-zones',
@@ -8,17 +12,82 @@ import { Zone } from '../../../interfaces/interfaces';
 })
 export class ZonesPage implements OnInit {
 
-   zones: Zone[] = [];
+  angForm: FormGroup;
+  zones: Zone[] = [];
+  showForm: boolean = false;
+  update: boolean = false;
 
-  constructor() { }
+  constructor(
+    private fb: FormBuilder,
+    private zonesService: ZonesService,
+    private uiService: UIService
+  ) {
+    this.createForm();
+  }
 
   ngOnInit() {
+    this.zonesService.getZones().subscribe(
+      (response: any) => {
+        this.zones = response.data;
+      },
+      (error) => {
+        console.log('Error: ', error);
+      }
+    );
+  }
+
+  createForm() {
+    this.angForm = this.fb.group({
+      nombre: ['', Validators.required],
+      estado: ['']
+    });
   }
 
   onSearchChange(event) {
 
   }
 
-  addZone() {}
+  async onSubmit() {
+    let message;
+    if (this.angForm.valid) {
+      if (this.update) {
+        const updated = await this.zonesService.updateZone(this.angForm.value);
+        if (updated) {
+          message = 'La zona ha sido actualizada correctamente';
+          this.reset();
+        } else {
+          message = 'Ha ocurrido un problema, por favor intentelo más tarde';
+        }
+      } else {
+        const saved = await this.zonesService.addZone(this.angForm.value);
+        if (saved) {
+          message = 'La zona ha sido agregada correctamente';
+          this.reset();
+        } else {
+          message = 'Ha ocurrido un problema, por favor intentelo más tarde';
+        }
+      }
+    } else {
+      message = 'Por vafor verifique los datos';
+    }
+    this.uiService.showToast(message);
+  }
+
+  editPlant(plant) {
+    // tslint:disable-next-line: forin
+    for (const i in plant) {
+      if (i !== 'created_at' && i !== 'updated_at') {
+        this.angForm.controls[i].setValue(plant[i]);
+      }
+    }
+    this.showForm = true;
+    this.update = true;
+  }
+
+  reset() {
+    this.showForm = false;
+    this.update = false;
+    this.createForm();
+  }
 
 }
