@@ -8,7 +8,7 @@
 
   <ion-list *ngIf="!showForm">
     <ion-item-sliding *ngFor="let zone of zones">
-      <app-zone [zone]="zone"></app-zone>
+      <app-zone [zone]="zone" (edit)="editZone($event)"></app-zone>
     </ion-item-sliding>
   </ion-list>
 
@@ -16,20 +16,20 @@
     <!-- <ion-item>
         <img src="/assets/img/tree.svg" width="80px" height="80px">
         <ion-label text-left>
-          <h1>Agregar planta</h1>
+          <h1>Agregar Zona</h1>
         </ion-label>
       </ion-item> -->
   
     <ion-item>
       <ion-label position="floating">Nombre</ion-label>
-      <ion-input type="text" formControlName="nombre"></ion-input>
+      <ion-input type="text" formControlName="nombre" required></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label>Estado</ion-label>
-      <ion-select placeholder="Seleccione un estado" interface="action-sheet">
-        <ion-select-option value="0">Desactivado</ion-select-option>
-        <ion-select-option value="1">Activado</ion-select-option>
+      <ion-select placeholder="Seleccione un estado" formControlName="estado" interface="action-sheet">
+        <ion-select-option [value]="0">Desactivado</ion-select-option>
+        <ion-select-option [value]="1">Activado</ion-select-option>
       </ion-select>
     </ion-item>
   

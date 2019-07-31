@@ -20,19 +20,22 @@ export class RoleComponent implements OnInit {
 
   ngOnInit() {}
 
-  editRole(role) {
+  editRole(role: Role) {
     this.edit.emit(role);
   }
 
   async deleteRole(roleId) {
-    const deleted = await this.rolesService.deleteRole(roleId);
-    let message;
-    if (deleted) {
-      message = 'El rol ha sido eliminado';
-    } else {
-      message = 'Ha ocurrido un error, por favor intentelo más tarde';
+    const control = await this.uiService.showConfirmAlert('¿Estas seguro de realizar está acción?');
+    if (control) {
+      const deleted = await this.rolesService.deleteRole(roleId);
+      let message;
+      if (deleted) {
+        message = 'El rol ha sido eliminado';
+      } else {
+        message = 'Ha ocurrido un error, por favor intentelo más tarde';
+      }
+      this.uiService.showToast(message);
     }
-    this.uiService.showToast(message);
   }
 
 }

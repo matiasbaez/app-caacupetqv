@@ -19,6 +19,30 @@ export class UIService {
     await alert.present();
   }
 
+  showConfirmAlert(message: string) {
+    const ts = this;
+    return new Promise(async resolve => {
+      const alert = await ts.alertCtrl.create({
+        message,
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            handler: () => {
+              resolve(false);
+            }
+          }, {
+            text: 'Aceptar',
+            handler: () => {
+              resolve(true);
+            }
+          }
+        ]
+      });
+      await alert.present();
+    });
+  }
+
   async showToast(message: string) {
     const toast = await this.toastCtrl.create({
       message,

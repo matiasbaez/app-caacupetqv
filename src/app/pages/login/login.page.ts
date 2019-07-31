@@ -36,13 +36,13 @@ export class LoginPage implements OnInit {
 
   createForm() {
     this.angFormLogin = this.fb.group({
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
 
     this.angFormRegister = this.fb.group({
       name: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       password_confirmation: ['', Validators.required]
     });
@@ -60,7 +60,7 @@ export class LoginPage implements OnInit {
   async onSubmitRegister() {
     await this.validateEmail();
     if (this.angFormRegister.valid) {
-      const registered = await this.userService.register(this.angFormRegister.value);
+      const registered = await this.userService.register(this.angFormRegister.value, true);
       if (registered) {
         this.router.navigate(['/']);
       } else {

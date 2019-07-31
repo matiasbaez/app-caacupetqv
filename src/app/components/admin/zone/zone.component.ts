@@ -25,14 +25,17 @@ export class ZoneComponent implements OnInit {
   }
 
   async deleteZone(zoneId) {
-    const deleted = await this.zonesService.deleteZone(zoneId);
-    let message;
-    if (deleted) {
-      message = 'La zona ha sido eliminada';
-    } else {
-      message = 'Ha ocurrido un error, por favor intentelo más tarde';
+    const control = await this.uiService.showConfirmAlert('¿Estas seguro de realizar está acción?');
+    if (control) {
+      const deleted = await this.zonesService.deleteZone(zoneId);
+      let message;
+      if (deleted) {
+        message = 'La zona ha sido eliminada';
+      } else {
+        message = 'Ha ocurrido un error, por favor intentelo más tarde';
+      }
+      this.uiService.showToast(message);
     }
-    this.uiService.showToast(message);
   }
 
 }

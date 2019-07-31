@@ -25,14 +25,17 @@ export class UserComponent implements OnInit {
   }
 
   async deleteUser(userId) {
-    const deleted = await this.userService.deleteUser(userId);
-    let message;
-    if (deleted) {
-      message = 'El usuario ha sido eliminado';
-    } else {
-      message = 'Ha ocurrido un error, por favor intentelo más tarde';
+    const control = await this.uiService.showConfirmAlert('¿Estas seguro de realizar está acción?');
+    if (control) {
+      const deleted = await this.userService.deleteUser(userId);
+      let message;
+      if (deleted) {
+        message = 'El usuario ha sido eliminado';
+      } else {
+        message = 'Ha ocurrido un error, por favor intentelo más tarde';
+      }
+      this.uiService.showToast(message);
     }
-    this.uiService.showToast(message);
   }
 
 }

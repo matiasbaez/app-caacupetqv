@@ -39,7 +39,8 @@ export class ZonesPage implements OnInit {
   createForm() {
     this.angForm = this.fb.group({
       nombre: ['', Validators.required],
-      estado: ['']
+      estado: [''],
+      idZona: ['']
     });
   }
 
@@ -73,11 +74,11 @@ export class ZonesPage implements OnInit {
     this.uiService.showToast(message);
   }
 
-  editPlant(plant) {
+  editZone(zone) {
     // tslint:disable-next-line: forin
-    for (const i in plant) {
+    for (const i in zone) {
       if (i !== 'created_at' && i !== 'updated_at') {
-        this.angForm.controls[i].setValue(plant[i]);
+        this.angForm.controls[i].setValue(zone[i]);
       }
     }
     this.showForm = true;

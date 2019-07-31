@@ -56,14 +56,16 @@ export class UserService {
     });
   }
 
-  register(data) {
+  register(data, autoLogin) {
     return new Promise(resolve => {
       this.http.post(`${API}/register`, data).subscribe(
         async (response: any) => {
           if (response.token) {
-            await this.saveToken(response.token);
-            this.emmitter.emit(this.user);
-            resolve(true);
+            if (autoLogin) {
+              await this.saveToken(response.token);
+              this.emmitter.emit(this.user);
+              resolve(true);
+            } else { resolve(true); }
           } else {
             this.token = null;
             await this.storage.remove('token');
