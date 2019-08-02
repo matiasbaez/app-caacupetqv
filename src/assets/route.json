@@ -5,6 +5,5 @@
     {"icon": "settings", "name": "Administración", "redirectTo": "/admin", "admin": true, "loggedIn": true},
     {"icon": "person", "name": "Perfil", "redirectTo": "/main/profile", "admin": false, "loggedIn": true},
     {"icon": "heart", "name": "Donar", "redirectTo": "/donate", "admin": false, "loggedIn": false},
-    {"icon": "information-circle-outline", "name": "Acerca de", "redirectTo": "/about", "admin": false, "loggedIn": false },
-    {"icon": "exit", "name": "Salir", "redirectTo": "/main/home", "admin": false, "loggedIn": true }
+    {"icon": "information-circle-outline", "name": "Acerca de", "redirectTo": "/about", "admin": false, "loggedIn": false }
 ]
