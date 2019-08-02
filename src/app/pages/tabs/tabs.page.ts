@@ -19,10 +19,17 @@ export class TabsPage implements OnInit {
   }
 
   ngOnInit() {
+    this.userService.emmitter.subscribe(user => {
+      this.logged = (user) ? true : false;
+    },
+    err => {
+      console.log('Error: ', err);
+      this.logged = false;
+    });
   }
 
   async ionViewWillEnter() {
-    this.logged = await this.userService.validateToken();
+    // this.logged = await this.userService.validateToken();
   }
 
   loginPage() {

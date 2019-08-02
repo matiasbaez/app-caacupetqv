@@ -1,5 +1,64 @@
-<app-header></app-header>
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" color="danger">
+        <ion-icon slot="icon-only" name="exit"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
+
+  <ion-row class="top-20">
+
+    <ion-col size="12" text-center>
+      <img src="assets/avatars/{{user.image}}" class="img-avatar">
+    </ion-col>
+
+  </ion-row>
+
+  <ion-row class="top-20">
+    <ion-col size="12" text-center>
+      <ion-label>
+        <h1>Actualizar perfil</h1>
+      </ion-label>
+    </ion-col>
+  </ion-row>
+
+
+  <app-avatar-selector (avatarSelected)="user.image = $event" [currentAvatar]="user.image"></app-avatar-selector>
+
+  <form (ngSubmit)="updateUser(fUpdate)" [formGroup]="angForm">
+    <ion-row>
+      <ion-col>
+
+        <ion-list>
+            
+            <ion-item>
+                <ion-label>Nombre</ion-label>
+                <ion-input name="nombre" type="text" required formControlName="name"></ion-input>
+            </ion-item>
+            
+            <ion-item>
+                <ion-label>Email</ion-label>
+                <ion-input name="email" type="email" required formControlName="email"></ion-input>
+            </ion-item>
+            
+
+        </ion-list>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col text-center>
+        <ion-button type="submit" shape="round">
+          Actualizar
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+  </form>
+
 
 </ion-content>

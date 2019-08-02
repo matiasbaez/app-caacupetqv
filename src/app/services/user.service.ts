@@ -145,7 +145,7 @@ export class UserService {
     console.log('VALIDATE TOKEN');
     await this.loadToken();
     if (!this.token) {
-      this.navCtrl.navigateRoot('/main/home');
+      this.navCtrl.navigateRoot('/main/home', { animated: true });
       return Promise.resolve(false);
     }
 
@@ -165,5 +165,14 @@ export class UserService {
         }
       );
     });
+  }
+
+  async logout() {
+    this.token = null;
+    this.user = null;
+    this.storage.clear();
+    await this.validateToken();
+    this.emmitter.emit(this.user);
+    // this.navCtrl.navigateRoot('/main/home', {animated: true});
   }
 }

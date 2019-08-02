@@ -14,6 +14,7 @@ export class HomePage {
 
   public plants: Plant[] = [];
   public imageUrl: any = environment.imageUrl;
+  public loading = true;
 
   constructor(
     private plantsService: PlantsService
@@ -28,10 +29,11 @@ export class HomePage {
     this.plantsService.getPlants().subscribe(
       (response: any) => {
         this.plants = response.data;
+        this.loading = false;
       },
       (error) => {
         console.log('Error: ', error);
       }
-    );;
+    );
   }
 }

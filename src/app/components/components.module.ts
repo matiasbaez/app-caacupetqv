@@ -7,6 +7,7 @@ import { PlantComponent } from './admin/plant/plant.component';
 import { ZoneComponent } from './admin/zone/zone.component';
 import { UserComponent } from './admin/user/user.component';
 import { RoleComponent } from './admin/role/role.component';
+import { AvatarSelectorComponent } from './avatar-selector/avatar-selector.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { RoleComponent } from './admin/role/role.component';
     PlantComponent,
     ZoneComponent,
     UserComponent,
-    RoleComponent
+    RoleComponent,
+    AvatarSelectorComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +27,8 @@ import { RoleComponent } from './admin/role/role.component';
     PlantComponent,
     ZoneComponent,
     UserComponent,
-    RoleComponent
+    RoleComponent,
+    AvatarSelectorComponent
   ]
 })
 export class ComponentsModule { }
