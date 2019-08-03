@@ -38,3 +38,34 @@ export interface Publications {
     latLng: string;
     estado: number;
 }
+
+export interface GoogleLogin {
+    accessToken: string;
+    displayName: string;
+    email: string;
+    expires: number;
+    expires_in: number;
+    familyName: string;
+    givenName: string;
+    userId: string;
+}
+
+export interface FacebookProfileResponse {
+  email: string;
+  first_name: string;
+  id: string;
+  last_name: string;
+  name: string;
+  picture: FacebookPicture;
+}
+
+export interface FacebookPicture {
+  data: PictureData;
+}
+
+export interface PictureData {
+  height: number;
+  is_silhouette: boolean;
+  url: string;
+  width: number;
+}

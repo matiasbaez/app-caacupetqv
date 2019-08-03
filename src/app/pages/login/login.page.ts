@@ -83,6 +83,15 @@ export class LoginPage implements OnInit {
     this.userService.googleLogin();
   }
 
+  facebookLogin() {
+    const logged = this.userService.facebookLogin();
+    if (logged) {
+      this.router.navigate(['/']);
+    } else {
+      this.uiService.showAlert('Ha ocurrido un problema al intentar iniciar con Facebook');
+    }
+  }
+
   ionViewDidLeave() {
     this.menuCtrl.enable(true);
   }
