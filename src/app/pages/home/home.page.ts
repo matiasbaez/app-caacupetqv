@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
+import { Platform } from '@ionic/angular';
 import { Plant } from '../../interfaces/interfaces';
-import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PlantsService } from '../../services/plants.service';
-
 
 @Component({
   selector: 'app-home',
@@ -15,11 +14,19 @@ export class HomePage {
   public plants: Plant[] = [];
   public imageUrl: any = environment.imageUrl;
   public loading = true;
+  private subscription: any;
 
   constructor(
-    private plantsService: PlantsService
+    private plantsService: PlantsService,
+    private platform: Platform
   ) {
     this.loadData();
+  }
+
+  ionViewDidEnter() {
+    this.subscription = this.platform.backButton.subscribe(() => {
+      navigator['app'].exitApp();
+    });
   }
 
   onSearchChange(event) {
@@ -35,5 +42,9 @@ export class HomePage {
         console.log('Error: ', error);
       }
     );
+  }
+
+  ionViewWillLeave() {
+    this.subscription.unsubscribe();
   }
 }
