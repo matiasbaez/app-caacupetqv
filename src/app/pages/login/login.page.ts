@@ -79,12 +79,17 @@ export class LoginPage implements OnInit {
     }
   }
 
-  googleLogin() {
-    this.userService.googleLogin();
+  async googleLogin() {
+    const logged = await this.userService.googleLogin();
+    if (logged) {
+      this.router.navigate(['/']);
+    } else {
+      this.uiService.showAlert('Ha ocurrido un problema al intentar iniciar con Google');
+    }
   }
 
-  facebookLogin() {
-    const logged = this.userService.facebookLogin();
+  async facebookLogin() {
+    const logged = await this.userService.facebookLogin();
     if (logged) {
       this.router.navigate(['/']);
     } else {

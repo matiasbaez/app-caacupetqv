@@ -13,6 +13,7 @@ export class ProfilePage implements OnInit {
 
   angForm: FormGroup;
   user: User;
+  accessType: string;
 
   constructor(
     private userService: UserService,
@@ -24,6 +25,7 @@ export class ProfilePage implements OnInit {
 
   ngOnInit() {
     this.user = this.userService.getUser();
+    this.accessType = this.userService.accessType;
     for (const i in this.user) {
       if (i !== 'role') {
         this.angForm.controls[i].setValue(this.user[i]);
@@ -57,7 +59,7 @@ export class ProfilePage implements OnInit {
   }
 
   logout() {
-    this.userService.logout();
+    this.userService.providerLogout();
   }
 
 }

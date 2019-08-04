@@ -16,7 +16,7 @@ export class UserService {
 
   token: string = null;
   emmitter = new EventEmitter();
-  private accessType: string = ''; // email, fb, google
+  accessType: string = ''; // email, fb, google
   private user: User = null;
 
   constructor(
@@ -51,14 +51,18 @@ export class UserService {
   }
 
   googleLogin() {
-    this.googlePlus.login({})
-    .then(async (response: GoogleLogin) => {
-      console.log('response: ', response);
-      this.accessType = 'google';
-      await this.saveToken(response.accessToken);
-    })
-    .catch(err => {
-      console.log('Error: ', err);
+    return new Promise(resolve => {
+      this.googlePlus.login({})
+      .then(async (response: GoogleLogin) => {
+        this.accessType = 'google';
+        await this.saveToken(response.accessToken);
+        this.emmitter.emit(this.user);
+        resolve(true);
+      })
+      .catch(err => {
+        console.log('Error: ', err);
+        resolve(false);
+      });
     });
   }
 
@@ -68,8 +72,7 @@ export class UserService {
       .then(async (response: FacebookLoginResponse) => {
         if (response.status === 'connected') {
           this.accessType = 'fb';
-					await this.saveToken(response.authResponse.accessToken);
-					console.log('user: ', this.user);
+          await this.saveToken(response.authResponse.accessToken);
           this.emmitter.emit(this.user);
           resolve(true);
         } else {
@@ -83,53 +86,6 @@ export class UserService {
         resolve(false);
       });
     });
-  }
-
-  async facebookAccessStatus() {
-    await this.loadToken();
-    if (!this.token) {
-      this.navCtrl.navigateRoot('/main/home', { animated: true });
-      return Promise.resolve(false);
-    }
-
-    return new Promise(resolve => {
-      this.fb.getLoginStatus()
-      .then(async (response: FacebookLoginResponse) => {
-        if (response.status === 'connected') {
-          await this.getFacebookProfileInfo();
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      })
-      .catch(err => {
-        console.log('Error: ', err);
-        resolve(false);
-      });
-    });
-  }
-
-  async getFacebookProfileInfo() {
-    await this.fb.api(`/me?fields=id,name,email,first_name,picture,last_name,gender`, ['public_profile', 'user_friends', 'email'])
-    .then((response: FacebookProfileResponse) => {
-			console.log('response: ', response);
-			this.user = {
-				id: response.id,
-				name: response.name,
-				email: response.email,
-				image: response.picture.data.url,
-				role: 'n',
-				password: '',
-				estado: 1
-			};
-    })
-    .catch(err => console.log('Error: ', err));
-  }
-
-  facebookLogout() {
-    this.fb.logout()
-    .then(response => console.log('response: ', response))
-    .catch(err => console.log('Error: ', err));
   }
 
   register(data, autoLogin) {
@@ -203,21 +159,92 @@ export class UserService {
   async saveToken(token: string) {
     this.token = token;
     await this.storage.set('token', token);
-    if (this.accessType === 'email') { await this.validateToken(); }
-    if (this.accessType === 'fb') { await this.facebookAccessStatus(); }
+    await this.providerTokenValidation();
+  }
+
+  async providerTokenValidation() {
+    let access = false;
+    if (this.accessType === 'email') { access = await this.validateToken(); }
+    else if (this.accessType === 'fb') { access = await this.facebookAccessStatus(); }
+    else if (this.accessType === 'google') { access = await this.googleAccessStatus(); }
+    return access;
   }
 
   async loadToken() {
     this.token = await this.storage.get('token') || null;
   }
 
-  async validateToken(): Promise<boolean> {
-    console.log('VALIDATE TOKEN');
+  async redirectIfNotExistToken() {
     await this.loadToken();
     if (!this.token) {
       this.navCtrl.navigateRoot('/main/home', { animated: true });
       return Promise.resolve(false);
     }
+  }
+
+  async facebookAccessStatus(): Promise<boolean> {
+    await this.redirectIfNotExistToken();
+
+    return new Promise<boolean>(resolve => {
+      this.fb.getLoginStatus()
+        .then(async (response: FacebookLoginResponse) => {
+          if (response.status === 'connected') {
+            await this.getFacebookProfileInfo();
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch(err => {
+          console.log('Error: ', err);
+          resolve(false);
+        });
+    });
+  }
+
+  async getFacebookProfileInfo() {
+    const profileData = `/me?fields=id,name,email,first_name,picture.width(1024).height(1024),last_name,gender`;
+    await this.fb.api(profileData, ['public_profile', 'user_friends', 'email'])
+      .then((response: FacebookProfileResponse) => {
+        const imageUrl = (response.picture && response.picture.data) ? response.picture.data.url : '/assets/img/user.svg';
+        this.user = {
+          id: response.id,
+          name: response.name,
+          email: response.email,
+          image: imageUrl,
+          role: 'n',
+          estado: 1
+        };
+      })
+      .catch(err => console.log('Error: ', err));
+  }
+
+  async googleAccessStatus(): Promise<boolean> {
+    await this.redirectIfNotExistToken();
+
+    return new Promise<boolean>(resolve => {
+      this.googlePlus.trySilentLogin({})
+      .then(response => {
+        console.log('response: ', response);
+        this.user = {
+          id: response.userId,
+          name: response.displayName,
+          email: response.email,
+          image: (response.imageUrl) ? response.imageUrl : '/assets/img/user.svg',
+          role: 'n',
+          estado: 1
+        };
+        resolve(true);
+      })
+      .catch(err => {
+        console.log('Error: ', err);
+        resolve(false);
+      });
+    });
+  }
+
+  async validateToken(): Promise<boolean> {
+    await this.redirectIfNotExistToken();
 
     return new Promise<boolean>(resolve => {
       const headers = new HttpHeaders()
@@ -237,11 +264,35 @@ export class UserService {
     });
   }
 
+  async providerLogout() {
+    if (this.accessType === 'email') { await this.logout(); }
+    if (this.accessType === 'fb') { await this.facebookLogout(); }
+    if (this.accessType === 'google') { await this.googleLogout(); }
+  }
+
+  facebookLogout() {
+    this.fb.logout()
+    .then(response => {
+      console.log('response: ', response);
+      this.logout();
+    })
+    .catch(err => console.log('Error: ', err));
+  }
+
+  googleLogout() {
+    this.googlePlus.logout()
+    .then(response => {
+      console.log('response: ', response);
+      this.logout();
+    })
+    .catch(err => console.log('Error: ', err));
+  }
+
   async logout() {
     this.token = null;
     this.user = null;
     this.storage.clear();
-    await this.validateToken();
+    await this.providerTokenValidation();
     this.emmitter.emit(this.user);
     // this.navCtrl.navigateRoot('/main/home', {animated: true});
   }

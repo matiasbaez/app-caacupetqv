@@ -39,7 +39,7 @@ export class AppComponent {
   }
 
   async userData() {
-    this.logged = await this.userService.validateToken();
+    this.logged = await this.userService.providerTokenValidation();
     if (this.logged) {
       this.user = await this.userService.getUser();
     }
