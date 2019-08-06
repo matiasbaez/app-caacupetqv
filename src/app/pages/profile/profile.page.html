@@ -14,7 +14,7 @@
 
     <ion-col size="12" text-center>
       <img *ngIf="accessType === 'email'" src="assets/avatars/{{user.image}}" class="img-avatar">
-      <img *ngIf="accessType !== 'email'" [src]="user.image" class="img-avatar social-provider">
+      <img *ngIf="accessType !== 'email'" [src]="user.image | urlSanitizer" class="img-avatar social-provider">
     </ion-col>
 
   </ion-row>
