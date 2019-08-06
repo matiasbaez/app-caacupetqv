@@ -1,6 +1,6 @@
 [
     {"icon": "home", "name": "Plantas", "redirectTo": "/main/home", "admin": false, "loggedIn": false},
-    {"icon": "ios-leaf", "name": "Mis Plantas", "redirectTo": "/my-plants", "admin": false, "loggedIn": true},
+    {"icon": "ios-leaf", "name": "Mis Plantas", "redirectTo": "/publications", "admin": false, "loggedIn": true},
     {"icon": "bookmark", "name": "Misión | Visión", "redirectTo": "/mision-vision", "admin": false, "loggedIn": false},
     {"icon": "settings", "name": "Administración", "redirectTo": "/admin", "admin": true, "loggedIn": true},
     {"icon": "person", "name": "Perfil", "redirectTo": "/main/profile", "admin": false, "loggedIn": true},
