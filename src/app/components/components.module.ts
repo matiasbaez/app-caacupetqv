@@ -8,6 +8,8 @@ import { ZoneComponent } from './admin/zone/zone.component';
 import { UserComponent } from './admin/user/user.component';
 import { RoleComponent } from './admin/role/role.component';
 import { AvatarSelectorComponent } from './avatar-selector/avatar-selector.component';
+import { PublicationComponent } from './publication/publication.component';
+import { PipesModule } from '../pipes/pipes.module';
 
 @NgModule({
   declarations: [
@@ -16,11 +18,13 @@ import { AvatarSelectorComponent } from './avatar-selector/avatar-selector.compo
     ZoneComponent,
     UserComponent,
     RoleComponent,
-    AvatarSelectorComponent
+    AvatarSelectorComponent,
+    PublicationComponent
   ],
   imports: [
     CommonModule,
-    IonicModule
+    IonicModule,
+    PipesModule
   ],
   exports: [
     HeaderComponent,
@@ -28,7 +32,8 @@ import { AvatarSelectorComponent } from './avatar-selector/avatar-selector.compo
     ZoneComponent,
     UserComponent,
     RoleComponent,
-    AvatarSelectorComponent
+    AvatarSelectorComponent,
+    PublicationComponent
   ]
 })
 export class ComponentsModule { }

@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbsolutizePipe } from './absolutize.pipe';
+import { UrlSanitizerPipe } from './url-sanitizer.pipe';
 
 @NgModule({
-  declarations: [AbsolutizePipe],
+  declarations: [AbsolutizePipe, UrlSanitizerPipe],
   imports: [
     CommonModule
   ],
-  exports: [AbsolutizePipe]
+  exports: [AbsolutizePipe, UrlSanitizerPipe]
 })
 export class PipesModule { }
