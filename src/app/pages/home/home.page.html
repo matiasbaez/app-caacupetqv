@@ -17,7 +17,7 @@
 <ion-content>
   
   <ion-card *ngFor="let plant of plants" mode="ios">
-    <ion-img [src]="plant.imagen | absolutize"></ion-img>
+    <img [src]="(plant.imagen | absolutize) | urlSanitizer" />
     <ion-item>
       <!-- <ion-icon name="pin" slot="start"></ion-icon> -->
       <ion-label>{{ plant.nombre }}</ion-label>

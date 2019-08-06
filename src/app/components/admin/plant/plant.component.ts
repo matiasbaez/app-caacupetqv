@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Plant } from '../../../interfaces/interfaces';
 import { PlantsService } from '../../../services/plants.service';
-import { UIService } from 'src/app/services/ui.service';
+import { UIService } from '../../../services/ui.service';
 
 @Component({
   selector: 'app-plant',

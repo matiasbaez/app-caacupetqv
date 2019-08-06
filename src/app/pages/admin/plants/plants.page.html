@@ -48,7 +48,8 @@
     <ion-row>
       <ion-col>
         <ion-card>
-          <img src="/assets/img/plant.jpg">
+          <img *ngIf="angForm.value.imagen && angForm.value.imageUrl" [src]="angForm.value.imagen">
+          <img *ngIf="angForm.value.imagen && !angForm.value.imageUrl" [src]="(angForm.value.imagen | absolutize) | urlSanitizer">
         </ion-card>
       </ion-col>
     </ion-row>

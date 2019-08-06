@@ -35,11 +35,12 @@ export class HomePage {
   loadData() {
     this.plantsService.getPlants().subscribe(
       (response: any) => {
-        this.plants = response.data;
         this.loading = false;
+        this.plants = response.data;
       },
       (error) => {
         console.log('Error: ', error);
+        this.loading = false;
       }
     );
   }

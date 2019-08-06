@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { PlantsService } from '../../../services/plants.service';
 import { Plant } from '../../../interfaces/interfaces';
 import { UIService } from '../../../services/ui.service';
+
+declare var window: any;
 
 @Component({
   selector: 'app-plants',
@@ -19,7 +22,8 @@ export class PlantsPage implements OnInit {
   constructor(
     private fb: FormBuilder,
     private plantsService: PlantsService,
-    private uiService: UIService
+    private uiService: UIService,
+    private camera: Camera
   ) {
     this.createForm();
   }
@@ -41,15 +45,50 @@ export class PlantsPage implements OnInit {
       nombre: ['', Validators.required],
       descripcion: [''],
       imagen: [''],
+      imageUrl: [''],
       estado: ['']
     });
   }
 
   onSearchChange(event) { }
 
-  openCamera() {}
+  openCamera() {
+    const options: CameraOptions = {
+      quality: 60,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      correctOrientation: true,
+      sourceType: this.camera.PictureSourceType.CAMERA
+    };
 
-  openGallery() {}
+    this.processImage(options);
+  }
+
+  openGallery() {
+    const options: CameraOptions = {
+      quality: 60,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      correctOrientation: true,
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
+    };
+
+    this.processImage(options);
+  }
+
+  processImage(options: CameraOptions) {
+    this.camera.getPicture(options).then((imageData) => {
+      const img = window.Ionic.WebView.convertFileSrc(imageData);
+      // console.log('path: ', img);
+      console.log('imageData: ', imageData);
+      this.angForm.controls['imagen'].setValue(img);
+      this.angForm.controls['imageUrl'].setValue(img);
+    }, (err) => {
+      // Handle error
+    });
+  }
 
   async onSubmit() {
     let message;
@@ -63,13 +102,23 @@ export class PlantsPage implements OnInit {
           message = 'Ha ocurrido un problema, por favor intentelo más tarde';
         }
       } else {
-        const saved = await this.plantsService.addPlant(this.angForm.value);
-        if (saved) {
-          message = 'La planta ha sido agregada correctamente';
-          this.reset();
-        } else {
-          message = 'Ha ocurrido un problema, por favor intentelo más tarde';
-        }
+        console.log('imagen: ', this.angForm.value.imagen);
+        await this.plantsService.readImage(this.angForm.value.imagen, async (result) => {
+          console.log('result: ', result, result.values());
+          const formData = result;
+          for (const i in this.angForm.value) {
+            if (i !== 'imagen' && i !== 'imageUrl' && this.angForm.value[i]) {
+              formData.append(i, this.angForm.value[i]);
+            }
+          }
+          const saved = await this.plantsService.addPlant(formData);
+          if (saved) {
+            message = 'La planta ha sido agregada correctamente';
+            this.reset();
+          } else {
+            message = 'Ha ocurrido un problema, por favor intentelo más tarde';
+          }
+        });
       }
     } else {
       message = 'Por vafor verifique los datos';
