@@ -6,10 +6,10 @@
 
 <ion-item>
   <ion-avatar slot="start">
-    <img src="/assets/img/{{publication.idPlanta.imagen}}" alt="">
+    <img [src]="(publication.planta.imagen | absolutize) | urlSanitizer" alt="">
   </ion-avatar>
   <ion-label>
-    <h3>{{ publication.idPlanta.nombre }}</h3>
+    <h3>{{ publication.planta.nombre }}</h3>
     <p>{{ publication.descripcion }}</p>
   </ion-label>
 </ion-item>

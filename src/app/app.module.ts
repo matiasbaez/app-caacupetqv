@@ -1,22 +1,27 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import { RouteReuseStrategy } from '@angular/router';
+import { NgModule } from '@angular/core';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
-import { ComponentsModule } from './components/components.module';
-import { PipesModule } from './pipes/pipes.module';
+
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { File } from '@ionic-native/file/ngx';
+
+import { ComponentsModule } from './components/components.module';
+import { AppRoutingModule } from './app-routing.module';
+import { PipesModule } from './pipes/pipes.module';
+import { AppComponent } from './app.component';
+
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,13 +39,15 @@ import { File } from '@ionic-native/file/ngx';
     PipesModule
   ],
   providers: [
-    StatusBar,
-    SplashScreen,
-    GooglePlus,
-    Facebook,
-    Camera,
     File,
+    Camera,
+    Facebook,
+    StatusBar,
+    Diagnostic,
+    GooglePlus,
     Geolocation,
+    SplashScreen,
+    LocationAccuracy,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

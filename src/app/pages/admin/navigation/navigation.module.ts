@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { NavigationPage } from './navigation.page';
+import { UserGuard } from '../../../guards/user.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'plants' },
@@ -13,10 +14,10 @@ const routes: Routes = [
     path: '',
     component: NavigationPage,
     children: [
-      { path: 'plants', loadChildren: '../plants/plants.module#PlantsPageModule'},
-      { path: 'zones', loadChildren: '../zones/zones.module#ZonesPageModule'},
-      { path: 'users', loadChildren: '../users/users.module#UsersPageModule'},
-      { path: 'roles', loadChildren: '../roles/roles.module#RolesPageModule'},
+      { path: 'plants', loadChildren: '../plants/plants.module#PlantsPageModule', canLoad: [UserGuard]},
+      { path: 'zones', loadChildren: '../zones/zones.module#ZonesPageModule', canLoad: [UserGuard]},
+      { path: 'users', loadChildren: '../users/users.module#UsersPageModule', canLoad: [UserGuard]},
+      { path: 'roles', loadChildren: '../roles/roles.module#RolesPageModule', canLoad: [UserGuard]},
     ]
   }
 ];

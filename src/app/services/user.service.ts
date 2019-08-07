@@ -164,6 +164,7 @@ export class UserService {
 
   async providerTokenValidation() {
     let access = false;
+    console.log('accessType: ', this.accessType);
     if (this.accessType === 'email') { access = await this.validateToken(); }
     else if (this.accessType === 'fb') { access = await this.facebookAccessStatus(); }
     else if (this.accessType === 'google') { access = await this.googleAccessStatus(); }
