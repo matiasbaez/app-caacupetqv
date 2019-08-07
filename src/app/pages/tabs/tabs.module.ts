@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { TabsPage } from './tabs.page';
+import { UserGuard } from '../../guards/user.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home' },
@@ -14,7 +15,7 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       { path: 'home', loadChildren: '../home/home.module#HomePageModule' },
-      { path: 'profile', loadChildren: '../profile/profile.module#ProfilePageModule' },
+      { path: 'profile', loadChildren: '../profile/profile.module#ProfilePageModule', canLoad: [UserGuard] },
       { path: 'donate', loadChildren: '../donate/donate.module#DonatePageModule' },
     ]
   }

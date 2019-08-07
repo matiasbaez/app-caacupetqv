@@ -12,8 +12,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { ComponentsModule } from './components/components.module';
 import { PipesModule } from './pipes/pipes.module';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Facebook } from '@ionic-native/facebook/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,6 +38,9 @@ import { Facebook } from '@ionic-native/facebook/ngx';
     SplashScreen,
     GooglePlus,
     Facebook,
+    Camera,
+    File,
+    Geolocation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

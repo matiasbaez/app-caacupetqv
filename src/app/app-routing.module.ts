@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { UserGuard } from './guards/user.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
@@ -7,9 +8,9 @@ const routes: Routes = [
   { path: 'login-register', loadChildren: './pages/login/login.module#LoginPageModule' },
   { path: 'about', loadChildren: './pages/about/about.module#AboutPageModule' },
   { path: 'mision-vision', loadChildren: './pages/mision-vision/mision-vision.module#MisionVisionPageModule' },
-  { path: 'publications', loadChildren: './pages/publications/publications.module#PublicationsPageModule' },
+  { path: 'publications', loadChildren: './pages/publications/publications.module#PublicationsPageModule', canLoad: [UserGuard] },
   { path: 'donate', loadChildren: './pages/donate/donate.module#DonatePageModule' },
-  { path: 'admin', loadChildren: './pages/admin/navigation/navigation.module#NavigationPageModule' },
+  { path: 'admin', loadChildren: './pages/admin/navigation/navigation.module#NavigationPageModule', canLoad: [UserGuard] },
 ];
 
 @NgModule({
