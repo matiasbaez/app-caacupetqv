@@ -14,6 +14,7 @@ const API = environment.api;
 })
 export class UserService {
 
+  page = 0;
   token: string = null;
   emmitter = new EventEmitter();
   accessType: string = ''; // email, fb, google
@@ -122,9 +123,11 @@ export class UserService {
     return { ...this.user };
   }
 
-  getUserList() {
+  getUserList(pull: boolean = false) {
+    if (pull) { this.page = 0; }
+    this.page++;
     const headers = new HttpHeaders().set('Authorization', 'Bearer' + this.token);
-    return this.http.get<User>(`${API}/user/list`, {headers});
+    return this.http.get<User>(`${API}/user/list?page=${this.page}`, {headers});
   }
 
   validateEmail(email: string) {

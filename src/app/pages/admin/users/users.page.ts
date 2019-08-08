@@ -18,6 +18,7 @@ export class UsersPage implements OnInit {
   roles: Role[] = [];
   showForm: boolean = false;
   update: boolean = false;
+  public infScrollDisabled = false;
 
   constructor(
     private fb: FormBuilder,
@@ -46,10 +47,15 @@ export class UsersPage implements OnInit {
     });
   }
 
-  getUsers() {
-    this.userService.getUserList().subscribe(
+  getUsers(event?, pull: boolean = false) {
+    this.userService.getUserList(pull).subscribe(
       (response: any) => {
-        this.users = response.data;
+        this.users.push(...response.data);
+        if (event) {
+          event.target.complete();
+
+          if (response.data.length === 0) { this.infScrollDisabled = true; }
+        }
       },
       (error) => {
         console.log('Error: ', error);
@@ -132,6 +138,12 @@ export class UsersPage implements OnInit {
     }
     this.showForm = true;
     this.update = true;
+  }
+
+  refresh(event) {
+    this.getUsers(event, true);
+    this.users = [];
+    this.infScrollDisabled = false;
   }
 
   reset() {

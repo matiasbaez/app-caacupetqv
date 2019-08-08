@@ -16,6 +16,7 @@ export class RolesPage implements OnInit {
   roles: Role[] = [];
   showForm: boolean = false;
   update: boolean = false;
+  public infScrollDisabled = false;
 
   constructor(
     private fb: FormBuilder,
@@ -38,10 +39,15 @@ export class RolesPage implements OnInit {
     });
   }
 
-  getRoles() {
-    this.rolesService.getRoles().subscribe(
+  getRoles(event?, pull: boolean = false) {
+    this.rolesService.getRoles(pull).subscribe(
       (response: any) => {
-        this.roles = response.data;
+        this.roles.push(...response.data);
+        if (event) {
+          event.target.complete();
+
+          if (response.data.length === 0) { this.infScrollDisabled = true; }
+        }
       },
       (error) => {
         console.log('Error: ', error);
@@ -61,7 +67,7 @@ export class RolesPage implements OnInit {
           }
         );
       }
-    } else { this.getRoles(); }
+    } else { this.getRoles(null, true); }
   }
 
   async onSubmit() {
@@ -99,6 +105,12 @@ export class RolesPage implements OnInit {
     }
     this.showForm = true;
     this.update = true;
+  }
+
+  refresh(event) {
+    this.getRoles(event, true);
+    this.roles = [];
+    this.infScrollDisabled = false;
   }
 
   reset() {

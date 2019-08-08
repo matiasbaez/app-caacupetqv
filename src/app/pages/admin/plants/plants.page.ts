@@ -18,6 +18,7 @@ export class PlantsPage implements OnInit {
   plants: Plant[] = [];
   showForm: boolean = false;
   update: boolean = false;
+  public infScrollDisabled = false;
 
   constructor(
     private fb: FormBuilder,
@@ -29,7 +30,10 @@ export class PlantsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.getPlants();
+    this.getPlants(null, true);
+    this.plantsService.newPlant.subscribe(plant => {
+      this.plants.unshift(plant);
+    });
   }
 
   createForm() {
@@ -43,10 +47,15 @@ export class PlantsPage implements OnInit {
     });
   }
 
-  getPlants() {
-    this.plantsService.getPlants().subscribe(
+  getPlants(event?: any, pull: boolean = false) {
+    this.plantsService.getPlants(pull).subscribe(
       (response: any) => {
-        this.plants = response.data;
+        this.plants.push(...response.data);
+        if (event) {
+          event.target.complete();
+
+          if (response.data.length === 0) { this.infScrollDisabled = true; }
+        }
       },
       (error) => {
         console.log('Error: ', error);
@@ -152,6 +161,12 @@ export class PlantsPage implements OnInit {
     }
     this.showForm = true;
     this.update = true;
+  }
+
+  refresh(event) {
+    this.getPlants(event, true);
+    this.plants = [];
+    this.infScrollDisabled = false;
   }
 
   reset() {

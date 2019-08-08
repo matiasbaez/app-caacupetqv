@@ -6,6 +6,11 @@
 
 <ion-content padding>
 
+    <!-- Refresher -->
+    <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
     <ion-list *ngIf="!showForm">
         <ion-item-sliding *ngFor="let publication of publications">
             <app-publication [publication]="publication" (edit)="editPublication($event)"></app-publication>
@@ -71,5 +76,11 @@
             <ion-icon name="close"></ion-icon>
         </ion-fab-button>
     </ion-fab>
+
+    <!-- Infinite Scroll -->
+    <ion-infinite-scroll [disabled]="infScrollDisabled" threshold="150px" (ionInfinite)="getPublications($event)">
+        <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 
 </ion-content>

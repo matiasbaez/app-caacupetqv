@@ -11,15 +11,18 @@ const API = environment.api;
 })
 export class ZonesService {
 
+  page = 0;
+
   constructor(
     private http: HttpClient,
     private userService: UserService
   ) { }
 
-  getZones() {
-    const headers = new HttpHeaders()
-      .set('Authorization', 'Bearer ' + this.userService.token);
-    return this.http.get<Zone>(`${API}/zonas`, {headers});
+  getZones(pull: boolean = false) {
+    if (pull) { this.page = 0; }
+    this.page++;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.userService.token);
+    return this.http.get<Zone>(`${API}/zonas?page=${this.page}`, {headers});
   }
 
   searchByName(name: string) {

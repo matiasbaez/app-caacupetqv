@@ -6,12 +6,19 @@
 
 <ion-content padding>
 
+  <!-- Refresher -->
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Plants -->
   <ion-list *ngIf="!showForm">
     <ion-item-sliding *ngFor="let plant of plants">
       <app-plant [plant]="plant" (edit)="editPlant($event)"></app-plant>
     </ion-item-sliding>
   </ion-list>
 
+  <!-- Form -->
   <form [formGroup]="angForm" (ngSubmit)="onSubmit()" class="animated fast" *ngIf="showForm">
     <!-- <ion-item>
       <img src="/assets/img/tree.svg" width="80px" height="80px">
@@ -70,5 +77,11 @@
       <ion-icon name="close"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+  <!-- Infinite Scroll -->
+  <ion-infinite-scroll [disabled]="infScrollDisabled" threshold="150px" (ionInfinite)="getPlants($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>

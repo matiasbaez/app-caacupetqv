@@ -16,6 +16,7 @@ export class ZonesPage implements OnInit {
   zones: Zone[] = [];
   showForm: boolean = false;
   update: boolean = false;
+  public infScrollDisabled = false;
 
   constructor(
     private fb: FormBuilder,
@@ -37,10 +38,15 @@ export class ZonesPage implements OnInit {
     });
   }
 
-  getZones() {
-    this.zonesService.getZones().subscribe(
+  getZones(event?, pull: boolean = false) {
+    this.zonesService.getZones(pull).subscribe(
       (response: any) => {
-        this.zones = response.data;
+        this.zones.push(...response.data);
+        if (event) {
+          event.target.complete();
+
+          if (response.data.length === 0) { this.infScrollDisabled = true; }
+        }
       },
       (error) => {
         console.log('Error: ', error);
@@ -60,7 +66,7 @@ export class ZonesPage implements OnInit {
           }
         );
       }
-    } else { this.getZones(); }
+    } else { this.getZones(null, true); }
   }
 
   async onSubmit() {
@@ -98,6 +104,12 @@ export class ZonesPage implements OnInit {
     }
     this.showForm = true;
     this.update = true;
+  }
+
+  refresh(event) {
+    this.getZones(event, true);
+    this.zones = [];
+    this.infScrollDisabled = false;
   }
 
   reset() {

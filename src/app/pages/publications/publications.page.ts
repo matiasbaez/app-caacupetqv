@@ -27,6 +27,7 @@ export class PublicationsPage implements OnInit, OnChanges {
   update: boolean = false;
   user: User;
   loadingLocation: boolean = false;
+  public infScrollDisabled = false;
 
   constructor(
     private publicationsService: PublicationsService,
@@ -52,10 +53,15 @@ export class PublicationsPage implements OnInit, OnChanges {
 
   ngOnChanges() {}
 
-  getPublications() {
-    this.publicationsService.getPublications().subscribe(
+  getPublications(event?, pull: boolean = false) {
+    this.publicationsService.getPublications(pull).subscribe(
       (response: any) => {
-        this.publications = response.data;
+        this.publications.push(...response.data);
+        if (event) {
+          event.target.complete();
+
+          if (response.data.length === 0) { this.infScrollDisabled = true; }
+        }
       },
       (error) => { console.log('Error: ', error); }
     );
@@ -205,6 +211,12 @@ export class PublicationsPage implements OnInit, OnChanges {
     this.angForm.controls['imagen'].setValue(publication.planta.imagen);
     this.showForm = true;
     this.update = true;
+  }
+
+  refresh(event) {
+    this.getPublications(event, true);
+    this.zones = [];
+    this.infScrollDisabled = false;
   }
 
   reset() {

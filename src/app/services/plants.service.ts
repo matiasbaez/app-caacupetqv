@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { File, FileEntry } from '@ionic-native/file/ngx';
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Plant } from '../interfaces/interfaces';
 import { UserService } from './user.service';
@@ -13,6 +13,9 @@ const API = environment.api;
 })
 export class PlantsService {
 
+  page = 0;
+  newPlant = new EventEmitter<Plant>();
+
   constructor(
     private http: HttpClient,
     private userService: UserService,
@@ -20,8 +23,10 @@ export class PlantsService {
     private uiService: UIService
   ) { }
 
-  getPlants() {
-    return this.http.get<Plant>(`${API}/plantas`);
+  getPlants(pull: boolean = false) {
+    if (pull) { this.page = 0; }
+    this.page++;
+    return this.http.get<Plant>(`${API}/plantas?page=${this.page}`);
   }
 
   searchByName(name: string) {
@@ -56,7 +61,8 @@ export class PlantsService {
       this.http.post(`${API}/plantas`, formData, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
-          if (response === 200) {
+          if (response.success) {
+            this.newPlant.emit(response.plant);
             resolve(true);
           } else {
             resolve(false);

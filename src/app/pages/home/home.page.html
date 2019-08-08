@@ -15,6 +15,11 @@
 </ion-toolbar>
 
 <ion-content>
+
+  <!-- Refresher -->
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   
   <ion-card *ngFor="let plant of plants" mode="ios">
     <img [src]="(plant.imagen | absolutize) | urlSanitizer" />
@@ -54,6 +59,10 @@
     </ion-card>
   </div>
 
+  <!-- Infinite Scroll -->
+  <ion-infinite-scroll [disabled]="infScrollDisabled" threshold="150px" (ionInfinite)="loadData($event, false)">
+    <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>
 

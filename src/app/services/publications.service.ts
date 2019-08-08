@@ -11,15 +11,18 @@ const API = environment.api;
 })
 export class PublicationsService {
 
+  page = 0;
+
   constructor(
     private http: HttpClient,
     private userService: UserService
   ) { }
 
-  getPublications() {
-    const headers = new HttpHeaders()
-      .set('Authorization', 'Bearer ' + this.userService.token);
-    return this.http.get<Publications>(`${API}/publicaciones`, {headers});
+  getPublications(pull: boolean = false) {
+    if (pull) { this.page = 0; }
+    this.page++;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.userService.token);
+    return this.http.get<Publications>(`${API}/publicaciones?page=${this.page}`, {headers});
   }
 
   addPublication(data: Publications) {
