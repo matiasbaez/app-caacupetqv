@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
@@ -26,6 +26,12 @@ export class UserService {
     private googlePlus: GooglePlus,
     private fb: Facebook
   ) {}
+
+  searchByName(name: string) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.token);
+    const params = new HttpParams().append('name', name);
+    return this.http.get<User>(`${API}/search/usuarios`, { headers, params });
+  }
 
   login(data) {
     return new Promise(resolve => {
@@ -159,11 +165,13 @@ export class UserService {
   async saveToken(token: string) {
     this.token = token;
     await this.storage.set('token', token);
+    await this.storage.set('accessType', this.accessType);
     await this.providerTokenValidation();
   }
 
   async providerTokenValidation() {
     let access = false;
+    this.accessType = await this.storage.get('accessType');
     console.log('accessType: ', this.accessType);
     if (this.accessType === 'email') { access = await this.validateToken(); }
     else if (this.accessType === 'fb') { access = await this.facebookAccessStatus(); }

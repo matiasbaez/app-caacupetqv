@@ -24,12 +24,27 @@ export class HomePage {
   }
 
   ionViewDidEnter() {
-    this.subscription = this.platform.backButton.subscribe(() => {
-      navigator['app'].exitApp();
-    });
+    // this.subscription = this.platform.backButton.subscribe(() => {
+    //   navigator['app'].exitApp();
+    // });
   }
 
-  onSearchChange(event) {
+  onSearchChange(event: any) {
+    if (event.detail.value !== '') {
+      if (event.detail.value.length >= 3) {
+        this.loading = true;
+        this.plantsService.searchByName(event.detail.value).subscribe(
+          (response: any) => {
+            this.loading = false;
+            this.plants = response.data;
+          },
+          (error) => {
+            console.log('Error: ', error);
+            this.loading = false;
+          }
+        );
+      }
+    } else { this.loadData(); }
   }
 
   loadData() {
@@ -45,7 +60,7 @@ export class HomePage {
     );
   }
 
-  ionViewWillLeave() {
-    this.subscription.unsubscribe();
-  }
+  // ionViewWillLeave() {
+  //   this.subscription.unsubscribe();
+  // }
 }

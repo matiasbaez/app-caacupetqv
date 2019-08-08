@@ -29,22 +29,8 @@ export class UsersPage implements OnInit {
   }
 
   ngOnInit() {
-    this.userService.getUserList().subscribe(
-      (response: any) => {
-        this.users = response.data;
-      },
-      (error) => {
-        console.log('Error: ', error);
-      }
-    );
-    this.rolesService.getRoles().subscribe(
-      (response: any) => {
-        this.roles = response.data;
-      },
-      (error) => {
-        console.log('Error: ', error);
-      }
-    );
+    this.getUsers();
+    this.getRoles();
   }
 
   createForm() {
@@ -60,8 +46,41 @@ export class UsersPage implements OnInit {
     });
   }
 
-  onSearchChange(event) {
+  getUsers() {
+    this.userService.getUserList().subscribe(
+      (response: any) => {
+        this.users = response.data;
+      },
+      (error) => {
+        console.log('Error: ', error);
+      }
+    );
+  }
 
+  getRoles() {
+    this.rolesService.getRoles().subscribe(
+      (response: any) => {
+        this.roles = response.data;
+      },
+      (error) => {
+        console.log('Error: ', error);
+      }
+    );
+  }
+
+  onSearchChange(event: any) {
+    if (event.detail.value !== '') {
+      if (event.detail.value.length >= 3) {
+        this.userService.searchByName(event.detail.value).subscribe(
+          (response: any) => {
+            this.users = response.data;
+          },
+          (error) => {
+            console.log('Error: ', error);
+          }
+        );
+      }
+    } else { this.getUsers(); }
   }
 
   async onSubmitCreate() {

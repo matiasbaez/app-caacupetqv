@@ -55,7 +55,6 @@ export class PublicationsPage implements OnInit, OnChanges {
   getPublications() {
     this.publicationsService.getPublications().subscribe(
       (response: any) => {
-        console.log('response: ', response);
         this.publications = response.data;
       },
       (error) => { console.log('Error: ', error); }
@@ -65,7 +64,6 @@ export class PublicationsPage implements OnInit, OnChanges {
   getPlants() {
     this.plantsService.getPlants().subscribe(
       (response: any) => {
-        console.log('plants response: ', response);
         this.plants = response.data;
       },
       (error) => { console.log(' Error: ', error); }
@@ -75,7 +73,6 @@ export class PublicationsPage implements OnInit, OnChanges {
   getZones() {
     this.zonesService.getZones().subscribe(
       (response: any) => {
-        console.log('zones response: ', response);
         this.zones = response.data;
       },
       (error) => { console.log(' Error: ', error); }

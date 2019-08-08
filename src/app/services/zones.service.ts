@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { UserService } from './user.service';
 import { environment } from '../../environments/environment';
 import { Zone } from '../interfaces/interfaces';
@@ -20,6 +20,12 @@ export class ZonesService {
     const headers = new HttpHeaders()
       .set('Authorization', 'Bearer ' + this.userService.token);
     return this.http.get<Zone>(`${API}/zonas`, {headers});
+  }
+
+  searchByName(name: string) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.userService.token);
+    const params = new HttpParams().append('name', name);
+    return this.http.get<Zone>(`${API}/search/zonas`, { headers, params });
   }
 
   addZone(data: Zone) {

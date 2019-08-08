@@ -29,14 +29,7 @@ export class PlantsPage implements OnInit {
   }
 
   ngOnInit() {
-    this.plantsService.getPlants().subscribe(
-      (response: any) => {
-        this.plants = response.data;
-      },
-      (error) => {
-        console.log('Error: ', error);
-      }
-    );
+    this.getPlants();
   }
 
   createForm() {
@@ -50,7 +43,31 @@ export class PlantsPage implements OnInit {
     });
   }
 
-  onSearchChange(event) { }
+  getPlants() {
+    this.plantsService.getPlants().subscribe(
+      (response: any) => {
+        this.plants = response.data;
+      },
+      (error) => {
+        console.log('Error: ', error);
+      }
+    );
+  }
+
+  onSearchChange(event: any) {
+    if (event.detail.value !== '') {
+      if (event.detail.value.length >= 3) {
+        this.plantsService.searchByName(event.detail.value).subscribe(
+          (response: any) => {
+            this.plants = response.data;
+          },
+          (error) => {
+            console.log('Error: ', error);
+          }
+        );
+      }
+    } else { this.getPlants(); }
+  }
 
   openCamera() {
     const options: CameraOptions = {

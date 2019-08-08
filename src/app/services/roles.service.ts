@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { UserService } from './user.service';
 import { Role } from '../interfaces/interfaces';
 import { environment } from '../../environments/environment';
@@ -17,9 +17,14 @@ export class RolesService {
   ) { }
 
   getRoles() {
-    const headers = new HttpHeaders()
-      .set('Authorization', 'Bearer ' + this.userService.token);
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.userService.token);
     return this.http.get<Role>(`${API}/roles`, {headers});
+  }
+
+  searchByName(name: string) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.userService.token);
+    const params = new HttpParams().append('name', name);
+    return this.http.get<Role>(`${API}/search/roles`, { headers, params });
   }
 
   addRole(data: Role) {

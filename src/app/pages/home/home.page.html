@@ -19,15 +19,15 @@
   <ion-card *ngFor="let plant of plants" mode="ios">
     <img [src]="(plant.imagen | absolutize) | urlSanitizer" />
     <ion-item>
-      <!-- <ion-icon name="pin" slot="start"></ion-icon> -->
       <ion-label>{{ plant.nombre }}</ion-label>
-      <!-- <ion-button fill="outline" slot="end">View</ion-button> -->
+      <span>({{ plant.publicaciones }})</span>
+      <ion-icon name="ios-leaf" slot="end" class="ml-1"></ion-icon>
     </ion-item>
   
     <ion-card-content>{{ plant.descripcion }}</ion-card-content>
   </ion-card>
 
-  <div *ngIf="plants?.length === 0">
+  <div *ngIf="plants?.length === 0 && !loading">
     <ion-card mode="ios">
       <ion-img src="/assets/img/logo-lg.jpg"></ion-img>
       <ion-card-content>
@@ -37,7 +37,7 @@
     </ion-card>
   </div>
 
-  <div *ngIf="loading">
+  <div *ngIf="plants?.length === 0 && loading">
     <ion-card *ngFor="let item of [1,1,1]" mode="ios">
       <ion-skeleton-text style="width: 100%; height: 150px;"></ion-skeleton-text>
       <ion-item>

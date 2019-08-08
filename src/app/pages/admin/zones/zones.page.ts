@@ -26,14 +26,7 @@ export class ZonesPage implements OnInit {
   }
 
   ngOnInit() {
-    this.zonesService.getZones().subscribe(
-      (response: any) => {
-        this.zones = response.data;
-      },
-      (error) => {
-        console.log('Error: ', error);
-      }
-    );
+    this.getZones();
   }
 
   createForm() {
@@ -44,8 +37,30 @@ export class ZonesPage implements OnInit {
     });
   }
 
-  onSearchChange(event) {
+  getZones() {
+    this.zonesService.getZones().subscribe(
+      (response: any) => {
+        this.zones = response.data;
+      },
+      (error) => {
+        console.log('Error: ', error);
+      }
+    );
+  }
 
+  onSearchChange(event: any) {
+    if (event.detail.value !== '') {
+      if (event.detail.value.length >= 3) {
+        this.zonesService.searchByName(event.detail.value).subscribe(
+          (response: any) => {
+            this.zones = response.data;
+          },
+          (error) => {
+            console.log('Error: ', error);
+          }
+        );
+      }
+    } else { this.getZones(); }
   }
 
   async onSubmit() {

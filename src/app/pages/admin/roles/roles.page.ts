@@ -26,14 +26,7 @@ export class RolesPage implements OnInit {
   }
 
   ngOnInit() {
-    this.rolesService.getRoles().subscribe(
-      (response: any) => {
-        this.roles = response.data;
-      },
-      (error) => {
-        console.log('Error: ', error);
-      }
-    );
+    this.getRoles();
   }
 
   createForm() {
@@ -45,8 +38,30 @@ export class RolesPage implements OnInit {
     });
   }
 
-  onSearchChange(event) {
+  getRoles() {
+    this.rolesService.getRoles().subscribe(
+      (response: any) => {
+        this.roles = response.data;
+      },
+      (error) => {
+        console.log('Error: ', error);
+      }
+    );
+  }
 
+  onSearchChange(event: any) {
+    if (event.detail.value !== '') {
+      if (event.detail.value.length >= 3) {
+        this.rolesService.searchByName(event.detail.value).subscribe(
+          (response: any) => {
+            this.roles = response.data;
+          },
+          (error) => {
+            console.log('Error: ', error);
+          }
+        );
+      }
+    } else { this.getRoles(); }
   }
 
   async onSubmit() {

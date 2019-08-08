@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { File, FileEntry } from '@ionic-native/file/ngx';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
@@ -22,6 +22,11 @@ export class PlantsService {
 
   getPlants() {
     return this.http.get<Plant>(`${API}/plantas`);
+  }
+
+  searchByName(name: string) {
+    const params = new HttpParams().append('name', name);
+    return this.http.get<Plant>(`${API}/search/plantas`, {params});
   }
 
   async readImage(imgPath, callback) {
