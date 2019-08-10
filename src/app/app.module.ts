@@ -14,6 +14,7 @@ import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
+import { HTTP } from '@ionic-native/http/ngx';
 import { File } from '@ionic-native/file/ngx';
 
 import { ComponentsModule } from './components/components.module';
@@ -40,6 +41,7 @@ import { AppComponent } from './app.component';
   ],
   providers: [
     File,
+    HTTP,
     Camera,
     Facebook,
     StatusBar,

@@ -41,7 +41,7 @@ export class PlantsPage implements OnInit {
       idPlanta: [''],
       nombre: ['', Validators.required],
       descripcion: [''],
-      imagen: [''],
+      imagen: ['', Validators.required],
       imageUrl: [''],
       estado: ['']
     });

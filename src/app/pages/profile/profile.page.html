@@ -36,7 +36,7 @@
 
   <app-avatar-selector *ngIf="accessType === 'email'" (avatarSelected)="user.image = $event" [currentAvatar]="user.image"></app-avatar-selector>
 
-  <form (ngSubmit)="updateUser(fUpdate)" [formGroup]="angForm">
+  <form (ngSubmit)="updateUser()" [formGroup]="angForm">
     <ion-row>
       <ion-col>
 

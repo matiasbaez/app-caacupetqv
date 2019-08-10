@@ -13,4 +13,13 @@ export class DataService {
   getMenuItems() {
     return this.http.get<any>('/assets/route.json');
   }
+
+  parseData(data) {
+    try {
+      data = JSON.parse(data);
+    } catch (e) {
+      console.error('JSON parsing error');
+    }
+    return data;
+  }
 }

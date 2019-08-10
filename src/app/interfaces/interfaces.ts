@@ -30,13 +30,16 @@ export interface Zone {
 }
 
 export interface Publications {
-  idPlublicacion: string;
+  idPublicacion: string;
   idUsuario: string;
   idPlanta: string;
   idZona: string;
   descripcion: string;
   latLng: string;
   estado: number;
+  planta: Plant;
+  usuario: User;
+  zona: Zone;
 }
 
 export interface GoogleLogin {

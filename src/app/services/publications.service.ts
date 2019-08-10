@@ -49,7 +49,7 @@ export class PublicationsService {
     return new Promise(resolve => {
       const headers = new HttpHeaders()
         .append('Authorization', 'Bearer ' + this.userService.token);
-      this.http.put(`${API}/publicaciones/${data.idPlublicacion}`, data, { headers }).subscribe(
+      this.http.put(`${API}/publicaciones/${data.idPublicacion}`, data, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
           if (response === 200) {

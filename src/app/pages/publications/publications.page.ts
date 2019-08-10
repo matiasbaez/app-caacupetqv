@@ -215,7 +215,7 @@ export class PublicationsPage implements OnInit, OnChanges {
 
   refresh(event) {
     this.getPublications(event, true);
-    this.zones = [];
+    this.publications = [];
     this.infScrollDisabled = false;
   }
 
