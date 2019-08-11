@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Zone } from '../../../interfaces/interfaces';
-import { UIService } from '../../../services/ui.service';
 import { ZonesService } from '../../../services/zones.service';
-import { Observable } from 'rxjs';
+import { DataService } from '../../../services/data.service';
+import { UIService } from '../../../services/ui.service';
+import { Zone } from '../../../interfaces/interfaces';
 
 @Component({
   selector: 'app-zones',
@@ -19,9 +19,10 @@ export class ZonesPage implements OnInit {
   public infScrollDisabled = false;
 
   constructor(
-    private fb: FormBuilder,
     private zonesService: ZonesService,
-    private uiService: UIService
+    private dataService: DataService,
+    private uiService: UIService,
+    private fb: FormBuilder,
   ) {
     this.createForm();
   }
@@ -39,32 +40,32 @@ export class ZonesPage implements OnInit {
   }
 
   getZones(event?, pull: boolean = false) {
-    this.zonesService.getZones(pull).subscribe(
-      (response: any) => {
-        this.zones.push(...response.data);
-        if (event) {
-          event.target.complete();
+    this.zonesService.getZones(pull)
+    .then((response: any) => {
+      const parse = this.dataService.parseData(response.data);
+      this.zones.push(...parse.data);
+      if (event) {
+        event.target.complete();
 
-          if (response.data.length === 0) { this.infScrollDisabled = true; }
-        }
-      },
-      (error) => {
-        console.log('Error: ', error);
+        if (parse.data.length === 0) { this.infScrollDisabled = true; }
       }
-    );
+    })
+    .catch((error) => {
+      console.log('Error: ', error);
+    });
   }
 
   onSearchChange(event: any) {
     if (event.detail.value !== '') {
       if (event.detail.value.length >= 3) {
-        this.zonesService.searchByName(event.detail.value).subscribe(
-          (response: any) => {
-            this.zones = response.data;
-          },
-          (error) => {
-            console.log('Error: ', error);
-          }
-        );
+        this.zonesService.searchByName(event.detail.value)
+        .then((response: any) => {
+          const parse = this.dataService.parseData(response.data);
+          this.zones = parse.data;
+        })
+        .catch((error) => {
+          console.log('Error: ', error);
+        });
       }
     } else { this.getZones(null, true); }
   }

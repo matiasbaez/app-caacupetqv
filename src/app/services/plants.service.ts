@@ -1,10 +1,13 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { File, FileEntry } from '@ionic-native/file/ngx';
+
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { Injectable, EventEmitter } from '@angular/core';
+import { File, FileEntry } from '@ionic-native/file/ngx';
+import { HTTP } from '@ionic-native/http/ngx';
 import { environment } from '../../environments/environment';
 import { Plant } from '../interfaces/interfaces';
 import { UserService } from './user.service';
 import { UIService } from './ui.service';
+import { DataService } from './data.service';
 
 const API = environment.api;
 
@@ -17,21 +20,22 @@ export class PlantsService {
   newPlant = new EventEmitter<Plant>();
 
   constructor(
-    private http: HttpClient,
+    private fileTransfer: FileTransfer,
+    private dataService: DataService,
     private userService: UserService,
-    private file: File,
-    private uiService: UIService
+    private uiService: UIService,
+    private http: HTTP,
+    private file: File
   ) { }
 
   getPlants(pull: boolean = false) {
     if (pull) { this.page = 0; }
     this.page++;
-    return this.http.get<Plant>(`${API}/plantas?page=${this.page}`);
+    return this.http.get(`${API}/plantas?page=${this.page}`, {}, {});
   }
 
   searchByName(name: string) {
-    const params = new HttpParams().append('name', name);
-    return this.http.get<Plant>(`${API}/search/plantas`, {params});
+    return this.http.get(`${API}/search/plantas`, { name }, {});
   }
 
   async readImage(imgPath, callback) {
@@ -40,6 +44,7 @@ export class PlantsService {
       (entry as FileEntry).file(async (file) => await this.readFile(file, callback));
     })
     .catch(err => {
+      console.log('Error: ', err);
       this.uiService.showToast('Ha ocurrido un error al leer el archivo.');
     });
   }
@@ -55,66 +60,82 @@ export class PlantsService {
     reader.readAsArrayBuffer(file);
   }
 
-  addPlant(formData: FormData) {
+  uploadImage(image: string) {
+    const options: FileUploadOptions = {
+      fileKey: 'imagen',
+      headers: {
+        Authorization: 'Bearer ' + this.userService.token
+      }
+    };
+
+    const fileTransfer: FileTransferObject = this.fileTransfer.create();
+    fileTransfer.upload(image, `${API}/upload`, options)
+    .then(response => {
+      console.log(response);
+    }).catch(err => {
+      console.log('Error al subir la imagen: ', err);
+    });
+  }
+
+  addPlant(formData) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders().append('Authorization', 'Bearer ' + this.userService.token);
-      this.http.post(`${API}/plantas`, formData, { headers }).subscribe(
-        async (response: any) => {
-          console.log('response: ', response);
-          if (response.success) {
-            this.newPlant.emit(response.plant);
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        },
-        (error) => {
-          console.log('Error: ', error);
+      this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
+      this.http.setDataSerializer('urlencoded');
+      this.http.post(`${API}/plantas`, formData, {})
+      .then(async (response: any) => {
+        const parse = this.dataService.parseData(response.data);
+        console.log('response: ', response);
+        if (parse.success) {
+          this.newPlant.emit(parse.plant);
+          resolve(true);
+        } else {
           resolve(false);
         }
-      );
+      })
+      .catch((error) => {
+        console.log('Error: ', error);
+        resolve(false);
+      });
     });
   }
 
   updatePlant(data: Plant) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders()
-        .append('Authorization', 'Bearer ' + this.userService.token);
-      this.http.put(`${API}/plantas/${data.idPlanta}`, data, { headers }).subscribe(
-        async (response: any) => {
-          console.log('response: ', response);
-          if (response === 200) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        },
-        (error) => {
-          console.log('Error: ', error);
+      this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
+      this.http.put(`${API}/plantas/${data.idPlanta}`, data, {})
+      .then(async (response: any) => {
+        console.log('response: ', response);
+        const parse = this.dataService.parseData(response.data);
+        if (parse.success) {
+          resolve(true);
+        } else {
           resolve(false);
         }
-      );
+      })
+      .catch((error) => {
+        console.log('Error: ', error);
+        resolve(false);
+      });
     });
   }
 
   deletePlant(id) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders()
-        .append('Authorization', 'Bearer ' + this.userService.token);
-      this.http.delete(`${API}/plantas/${id}`, { headers }).subscribe(
-        async (response: any) => {
-          console.log('response: ', response);
-          if (response === 200) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        },
-        (error) => {
-          console.log('Error: ', error);
+      this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
+      this.http.delete(`${API}/plantas/${id}`, {}, {})
+      .then(async (response: any) => {
+        console.log('response: ', response);
+        const parse = this.dataService.parseData(response.data);
+        if (parse.success) {
+          resolve(true);
+        } else {
           resolve(false);
         }
-      );
+      })
+      .catch((error) => {
+        console.log('Error: ', error);
+        resolve(false);
+      });
     });
   }
 }

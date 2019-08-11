@@ -5,6 +5,7 @@ import { UserService } from '../../../services/user.service';
 import { UIService } from '../../../services/ui.service';
 import { RolesService } from '../../../services/roles.service';
 import { Observable } from 'rxjs';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-users',
@@ -21,10 +22,11 @@ export class UsersPage implements OnInit {
   public infScrollDisabled = false;
 
   constructor(
-    private fb: FormBuilder,
-    private userService: UserService,
     private rolesService: RolesService,
-    private uiService: UIService
+    private dataService: DataService,
+    private userService: UserService,
+    private uiService: UIService,
+    private fb: FormBuilder
   ) {
     this.createForm();
   }
@@ -48,43 +50,43 @@ export class UsersPage implements OnInit {
   }
 
   getUsers(event?, pull: boolean = false) {
-    this.userService.getUserList(pull).subscribe(
-      (response: any) => {
-        this.users.push(...response.data);
-        if (event) {
-          event.target.complete();
+    this.userService.getUserList(pull)
+    .then((response: any) => {
+      const parse = this.dataService.parseData(response.data);
+      this.users.push(...parse.data);
+      if (event) {
+        event.target.complete();
 
-          if (response.data.length === 0) { this.infScrollDisabled = true; }
-        }
-      },
-      (error) => {
-        console.log('Error: ', error);
+        if (parse.data.length === 0) { this.infScrollDisabled = true; }
       }
-    );
+    })
+    .catch((error) => {
+      console.log('Error: ', error);
+    });
   }
 
   getRoles() {
-    this.rolesService.getRoles().subscribe(
-      (response: any) => {
-        this.roles = response.data;
-      },
-      (error) => {
-        console.log('Error: ', error);
-      }
-    );
+    this.rolesService.getRoles()
+    .then((response: any) => {
+      const parse = this.dataService.parseData(response.data);
+      this.roles = parse.data;
+    })
+    .catch((error) => {
+      console.log('Error: ', error);
+    });
   }
 
   onSearchChange(event: any) {
     if (event.detail.value !== '') {
       if (event.detail.value.length >= 3) {
-        this.userService.searchByName(event.detail.value).subscribe(
-          (response: any) => {
-            this.users = response.data;
-          },
-          (error) => {
-            console.log('Error: ', error);
-          }
-        );
+        this.userService.searchByName(event.detail.value)
+        .then((response: any) => {
+          const parse = this.dataService.parseData(response.data);
+          this.users = parse.data;
+        })
+        .catch((error) => {
+          console.log('Error: ', error);
+        });
       }
     } else { this.getUsers(); }
   }

@@ -10,6 +10,7 @@ import { PublicationsService } from '../../services/publications.service';
 import { PlantsService } from '../../services/plants.service';
 import { ZonesService } from '../../services/zones.service';
 import { UserService } from '../../services/user.service';
+import { DataService } from '../../services/data.service';
 import { UIService } from '../../services/ui.service';
 
 @Component({
@@ -36,6 +37,7 @@ export class PublicationsPage implements OnInit, OnChanges {
     private zonesService: ZonesService,
     private userService: UserService,
     private geolocation: Geolocation,
+    private dataService: DataService,
     private diagnostic: Diagnostic,
     private uiService: UIService,
     private fb: FormBuilder
@@ -54,34 +56,37 @@ export class PublicationsPage implements OnInit, OnChanges {
   ngOnChanges() {}
 
   getPublications(event?, pull: boolean = false) {
-    this.publicationsService.getPublications(pull).subscribe(
-      (response: any) => {
-        this.publications.push(...response.data);
-        if (event) {
-          event.target.complete();
+    this.publicationsService.getPublications(pull)
+    .then((response: any) => {
+      const parse = this.dataService.parseData(response.data);
+      this.publications.push(...parse.data);
+      if (event) {
+        event.target.complete();
 
-          if (response.data.length === 0) { this.infScrollDisabled = true; }
-        }
-      },
-      (error) => { console.log('Error: ', error); }
+        if (parse.data.length === 0) { this.infScrollDisabled = true; }
+      }
+    })
+    .catch((error) => { console.log('Error: ', error); }
     );
   }
 
   getPlants() {
-    this.plantsService.getPlants().subscribe(
-      (response: any) => {
-        this.plants = response.data;
-      },
-      (error) => { console.log(' Error: ', error); }
+    this.plantsService.getPlants()
+    .then((response: any) => {
+      const parse = this.dataService.parseData(response.data);
+      this.plants = parse.data;
+    })
+    .catch((error) => { console.log(' Error: ', error); }
     );
   }
 
   getZones() {
-    this.zonesService.getZones().subscribe(
-      (response: any) => {
-        this.zones = response.data;
-      },
-      (error) => { console.log(' Error: ', error); }
+    this.zonesService.getZones()
+    .then((response: any) => {
+      const parse = this.dataService.parseData(response.data);
+      this.zones = parse.data;
+    })
+    .catch((error) => { console.log(' Error: ', error); }
     );
   }
 

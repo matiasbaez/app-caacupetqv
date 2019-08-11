@@ -6,7 +6,7 @@
 
 <ion-item>
   <ion-avatar slot="start">
-    <img *ngIf="!plant.imagen" src="/assets/img/plant.jpg" alt="">
+    <img *ngIf="!plant.imagen" src="/assets/img/logo.jpg" alt="">
     <img *ngIf="plant.imagen" [src]="(plant.imagen | absolutize) | urlSanitizer" alt="">
   </ion-avatar>
   <ion-label>

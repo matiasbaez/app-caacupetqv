@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { PlantsService } from '../../../services/plants.service';
-import { Plant } from '../../../interfaces/interfaces';
+import { DataService } from '../../../services/data.service';
 import { UIService } from '../../../services/ui.service';
+import { Plant } from '../../../interfaces/interfaces';
 
 declare var window: any;
 
@@ -21,9 +22,10 @@ export class PlantsPage implements OnInit {
   public infScrollDisabled = false;
 
   constructor(
-    private fb: FormBuilder,
     private plantsService: PlantsService,
+    private dataService: DataService,
     private uiService: UIService,
+    private fb: FormBuilder,
     private camera: Camera
   ) {
     this.createForm();
@@ -48,32 +50,32 @@ export class PlantsPage implements OnInit {
   }
 
   getPlants(event?: any, pull: boolean = false) {
-    this.plantsService.getPlants(pull).subscribe(
-      (response: any) => {
-        this.plants.push(...response.data);
-        if (event) {
-          event.target.complete();
+    this.plantsService.getPlants(pull)
+    .then((response: any) => {
+      const parse = this.dataService.parseData(response.data);
+      this.plants.push(...parse.data);
+      if (event) {
+        event.target.complete();
 
-          if (response.data.length === 0) { this.infScrollDisabled = true; }
-        }
-      },
-      (error) => {
-        console.log('Error: ', error);
+        if (parse.data.length === 0) { this.infScrollDisabled = true; }
       }
-    );
+    })
+    .catch((error) => {
+      console.log('Error: ', error);
+    });
   }
 
   onSearchChange(event: any) {
     if (event.detail.value !== '') {
       if (event.detail.value.length >= 3) {
-        this.plantsService.searchByName(event.detail.value).subscribe(
-          (response: any) => {
-            this.plants = response.data;
-          },
-          (error) => {
-            console.log('Error: ', error);
-          }
-        );
+        this.plantsService.searchByName(event.detail.value)
+        .then((response: any) => {
+          const parse = this.dataService.parseData(response.data);
+          this.plants = parse.data;
+        })
+        .catch((error) => {
+          console.log('Error: ', error);
+        });
       }
     } else { this.getPlants(); }
   }
@@ -105,12 +107,13 @@ export class PlantsPage implements OnInit {
   }
 
   processImage(options: CameraOptions) {
-    this.camera.getPicture(options).then((imageData) => {
+    this.camera.getPicture(options).then(imageData => {
       const img = window.Ionic.WebView.convertFileSrc(imageData);
       // console.log('path: ', img);
       console.log('imageData: ', imageData);
-      this.angForm.controls['imagen'].setValue(img);
+      this.angForm.controls['imagen'].setValue(imageData);
       this.angForm.controls['imageUrl'].setValue(img);
+      this.plantsService.uploadImage(imageData);
     }, (err) => {
       // Handle error
     });
@@ -128,28 +131,18 @@ export class PlantsPage implements OnInit {
           message = 'Ha ocurrido un problema, por favor intentelo más tarde';
         }
       } else {
-        console.log('imagen: ', this.angForm.value.imagen);
-        await this.plantsService.readImage(this.angForm.value.imagen, async (result) => {
-          console.log('result: ', result, result.values());
-          const formData = result;
-          for (const i in this.angForm.value) {
-            if (i !== 'imagen' && i !== 'imageUrl' && this.angForm.value[i]) {
-              formData.append(i, this.angForm.value[i]);
-            }
-          }
-          const saved = await this.plantsService.addPlant(formData);
-          if (saved) {
-            message = 'La planta ha sido agregada correctamente';
-            this.reset();
-          } else {
-            message = 'Ha ocurrido un problema, por favor intentelo más tarde';
-          }
-        });
+        const saved = await this.plantsService.addPlant(this.angForm.value);
+        if (saved) {
+          message = 'La planta ha sido agregada correctamente';
+          this.reset();
+        } else {
+          message = 'Ha ocurrido un problema, por favor intentelo más tarde';
+        }
       }
     } else {
       message = 'Por vafor verifique los datos';
     }
-    this.uiService.showToast(message);
+    // this.uiService.showToast(message);
   }
 
   editPlant(plant) {

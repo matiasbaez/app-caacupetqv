@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HTTP } from '@ionic-native/http/ngx';
 import { UserService } from './user.service';
 import { Role } from '../interfaces/interfaces';
 import { environment } from '../../environments/environment';
+import { DataService } from './data.service';
 
 const API = environment.api;
 
@@ -14,82 +15,79 @@ export class RolesService {
   page = 0;
 
   constructor(
-    private http: HttpClient,
-    private userService: UserService
+    private userService: UserService,
+    private dataService: DataService,
+    private http: HTTP
   ) { }
 
   getRoles(pull: boolean = false) {
     if (pull) { this.page = 0; }
     this.page++;
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.userService.token);
-    return this.http.get<Role>(`${API}/roles?page=${this.page}`, {headers});
+    this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
+    return this.http.get(`${API}/roles?page=${this.page}`, {}, {});
   }
 
   searchByName(name: string) {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.userService.token);
-    const params = new HttpParams().append('name', name);
-    return this.http.get<Role>(`${API}/search/roles`, { headers, params });
+    this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
+    return this.http.get(`${API}/search/roles`, { name }, {});
   }
 
   addRole(data: Role) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders()
-        .append('Authorization', 'Bearer ' + this.userService.token);
-      this.http.post(`${API}/roles`, data, {headers}).subscribe(
-        async (response: any) => {
-          if (response === 200) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        },
-        (error) => {
-          console.log('Error: ', error);
+      this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
+      this.http.post(`${API}/roles`, data, {})
+      .then(async (response: any) => {
+        const parse = this.dataService.parseData(response.data);
+        if (parse.success) {
+          resolve(true);
+        } else {
           resolve(false);
         }
-      );
+      })
+      .catch((error) => {
+        console.log('Error: ', error);
+        resolve(false);
+      });
     });
   }
 
   updateRole(data: Role) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders()
-        .append('Authorization', 'Bearer ' + this.userService.token);
-      this.http.put(`${API}/roles/${data.idRole}`, data, { headers }).subscribe(
-        async (response: any) => {
-          console.log('response: ', response);
-          if (response === 200) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        },
-        (error) => {
-          console.log('Error: ', error);
+      this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
+      this.http.put(`${API}/roles/${data.idRole}`, data, {})
+      .then(async (response: any) => {
+        console.log('response: ', response);
+        const parse = this.dataService.parseData(response.data);
+        if (parse.success) {
+          resolve(true);
+        } else {
           resolve(false);
         }
-      );
+      })
+      .catch((error) => {
+        console.log('Error: ', error);
+        resolve(false);
+      });
     });
   }
 
   deleteRole(id) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders()
-        .append('Authorization', 'Bearer ' + this.userService.token);
-      this.http.delete(`${API}/roles/${id}`, { headers }).subscribe(
-        async (response: any) => {
-          console.log('response: ', response);
-          if (response === 200) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        },
-        (error) => {
-          console.log('Error: ', error);
+      this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
+      this.http.delete(`${API}/roles/${id}`, {}, {})
+      .then(async (response: any) => {
+        console.log('response: ', response);
+        const parse = this.dataService.parseData(response.data);
+        if (parse.success) {
+          resolve(true);
+        } else {
           resolve(false);
         }
-      );
+      })
+      .catch((error) => {
+        console.log('Error: ', error);
+        resolve(false);
+      });
     });
   }
 }

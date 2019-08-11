@@ -3,6 +3,7 @@ import { Platform } from '@ionic/angular';
 import { Plant } from '../../interfaces/interfaces';
 import { environment } from '../../../environments/environment';
 import { PlantsService } from '../../services/plants.service';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +20,7 @@ export class HomePage implements OnInit {
 
   constructor(
     private plantsService: PlantsService,
+    private dataService: DataService,
     private platform: Platform
   ) {}
 
@@ -36,39 +38,36 @@ export class HomePage implements OnInit {
     if (event.detail.value !== '') {
       if (event.detail.value.length >= 3) {
         this.loading = true;
-        this.plantsService.searchByName(event.detail.value).subscribe(
-          (response: any) => {
-            this.loading = false;
-            this.plants = response.data;
-          },
-          (error) => {
-            console.log('Error: ', error);
-            this.loading = false;
-          }
-        );
+        this.plantsService.searchByName(event.detail.value)
+        .then((response: any) => {
+          const parse = this.dataService.parseData(response.data);
+          this.loading = false;
+          this.plants = parse.data;
+        })
+        .catch((error) => {
+          console.log('Error: ', error);
+          this.loading = false;
+        });
       }
     } else { this.loadData(null, true); }
   }
 
   loadData(event?, pull: boolean = false) {
-    console.log("loadData");
-    this.plantsService.getPlants(pull).subscribe(
-      (response: any) => {
-        this.loading = false;
-        this.plants.push(...response.data);
-        if (event) {
-          event.target.complete();
+    this.plantsService.getPlants(pull)
+    .then((response: any) => {
+      this.loading = false;
+      const parse = this.dataService.parseData(response.data);
+      this.plants.push(...parse.data);
+      if (event) {
+        event.target.complete();
 
-          console.log('length: ', response.data.length);
-          if (response.data.length === 0) { this.infScrollDisabled = true; }
-          console.log('disabled: ', this.infScrollDisabled);
-        }
-      },
-      (error) => {
-        console.log('Error: ', error);
-        this.loading = false;
+        if (parse.data.length === 0) { this.infScrollDisabled = true; }
       }
-    );
+    })
+    .catch((error) => {
+      console.log('Error: ', error);
+      this.loading = false;
+    });
   }
 
   refresh(event) {

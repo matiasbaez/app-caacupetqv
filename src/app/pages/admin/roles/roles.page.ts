@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Role } from '../../../interfaces/interfaces';
 import { RolesService } from '../../../services/roles.service';
+import { DataService } from '../../../services/data.service';
 import { UIService } from '../../../services/ui.service';
-import { Observable } from 'rxjs';
+import { Role } from '../../../interfaces/interfaces';
 
 @Component({
   selector: 'app-roles',
@@ -19,9 +19,10 @@ export class RolesPage implements OnInit {
   public infScrollDisabled = false;
 
   constructor(
-    private fb: FormBuilder,
     private rolesService: RolesService,
-    private uiService: UIService
+    private dataService: DataService,
+    private uiService: UIService,
+    private fb: FormBuilder
   ) {
     this.createForm();
   }
@@ -40,32 +41,32 @@ export class RolesPage implements OnInit {
   }
 
   getRoles(event?, pull: boolean = false) {
-    this.rolesService.getRoles(pull).subscribe(
-      (response: any) => {
-        this.roles.push(...response.data);
-        if (event) {
-          event.target.complete();
+    this.rolesService.getRoles(pull)
+    .then((response: any) => {
+      const parse = this.dataService.parseData(response.data);
+      this.roles.push(...parse.data);
+      if (event) {
+        event.target.complete();
 
-          if (response.data.length === 0) { this.infScrollDisabled = true; }
-        }
-      },
-      (error) => {
-        console.log('Error: ', error);
+        if (parse.data.length === 0) { this.infScrollDisabled = true; }
       }
-    );
+    })
+    .catch((error) => {
+      console.log('Error: ', error);
+    });
   }
 
   onSearchChange(event: any) {
     if (event.detail.value !== '') {
       if (event.detail.value.length >= 3) {
-        this.rolesService.searchByName(event.detail.value).subscribe(
-          (response: any) => {
-            this.roles = response.data;
-          },
-          (error) => {
-            console.log('Error: ', error);
-          }
-        );
+        this.rolesService.searchByName(event.detail.value)
+        .then((response: any) => {
+          const parse = this.dataService.parseData(response.data);
+          this.roles = parse.data;
+        })
+        .catch((error) => {
+          console.log('Error: ', error);
+        });
       }
     } else { this.getRoles(null, true); }
   }

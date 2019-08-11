@@ -7,6 +7,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
@@ -49,6 +50,7 @@ import { AppComponent } from './app.component';
     GooglePlus,
     Geolocation,
     SplashScreen,
+    FileTransfer,
     LocationAccuracy,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
