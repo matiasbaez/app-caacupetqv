@@ -102,9 +102,9 @@ export class UserService {
       this.http.post(`${API}/register`, data, {})
       .then(async (response: any) => {
         const parse = this.dataService.parseData(response.data);
-        if (response.status === 200) {
+        if (parse.success) {
           if (autoLogin) {
-            await this.saveToken(response.token);
+            await this.saveToken(parse.token);
             this.emmitter.emit(this.user);
             resolve(true);
           } else { resolve(true); }
@@ -152,7 +152,7 @@ export class UserService {
   deleteUser(userId) {
     this.http.setHeader('*', 'Authorization', `Bearer ${this.token}`);
     return new Promise(resolve => {
-      this.http.delete(`${API}/user/${userId}`, {}, {})
+      this.http.post(`${API}/user/${userId}`, {_method: 'DELETE'}, {})
       .then(response => {
         console.log('response: ', response);
         if (response.status === 200) {
@@ -195,10 +195,13 @@ export class UserService {
       this.navCtrl.navigateRoot('/main/home', { animated: true });
       return Promise.resolve(false);
     }
+
+    return Promise.resolve(true);
   }
 
   async facebookAccessStatus(): Promise<boolean> {
-    await this.redirectIfNotExistToken();
+    const validToken = await this.redirectIfNotExistToken();
+    if (!validToken) { return Promise.resolve(false); }
 
     return new Promise<boolean>(resolve => {
       this.fb.getLoginStatus()
@@ -235,7 +238,8 @@ export class UserService {
   }
 
   async googleAccessStatus(): Promise<boolean> {
-    await this.redirectIfNotExistToken();
+    const validToken = await this.redirectIfNotExistToken();
+    if (!validToken) { return Promise.resolve(false); }
 
     return new Promise<boolean>(resolve => {
       this.googlePlus.trySilentLogin({})
@@ -259,7 +263,8 @@ export class UserService {
   }
 
   async validateToken(): Promise<boolean> {
-    await this.redirectIfNotExistToken();
+    const validToken = await this.redirectIfNotExistToken();
+    if (!validToken) { return Promise.resolve(false); }
 
     return new Promise<boolean>(resolve => {
       this.http.setHeader('*', 'Authorization', `Bearer ${this.token}`);
@@ -305,8 +310,9 @@ export class UserService {
   async logout() {
     this.token = null;
     this.user = null;
-    this.storage.clear();
+    await this.storage.remove('token');
     await this.providerTokenValidation();
+    await this.storage.remove('accessType');
     this.emmitter.emit(this.user);
     // this.navCtrl.navigateRoot('/main/home', {animated: true});
   }

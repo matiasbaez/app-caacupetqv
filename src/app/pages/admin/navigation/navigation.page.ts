@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-navigation',
@@ -7,7 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavigationPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private userService: UserService
+  ) { }
+
+  async ionViewWillEnter() {
+    await this.userService.providerTokenValidation();
+  }
 
   ngOnInit() {
   }

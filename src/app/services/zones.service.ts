@@ -38,7 +38,7 @@ export class ZonesService {
       this.http.post(`${API}/zonas`, data, {})
       .then(async (response: any) => {
         const parse = this.dataService.parseData(response.data);
-        if (parse.success === 200) {
+        if (parse.success) {
           resolve(true);
         } else {
           resolve(false);
@@ -52,6 +52,7 @@ export class ZonesService {
   }
 
   updateZone(data: Zone) {
+    data['_method'] = 'PUT';
     return new Promise(resolve => {
       this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
       this.http.put(`${API}/zonas/${data.idZona}`, data, {})
@@ -74,7 +75,7 @@ export class ZonesService {
   deleteZone(id) {
     return new Promise(resolve => {
       this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
-      this.http.delete(`${API}/zonas/${id}`, {}, {})
+      this.http.delete(`${API}/zonas/${id}`, {_method: 'DELETE'}, {})
       .then(async (response: any) => {
         console.log('response: ', response);
         const parse = this.dataService.parseData(response.data);

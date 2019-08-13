@@ -100,9 +100,10 @@ export class PlantsService {
   }
 
   updatePlant(data: Plant) {
+    data['_method'] = 'PUT';
     return new Promise(resolve => {
       this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
-      this.http.put(`${API}/plantas/${data.idPlanta}`, data, {})
+      this.http.post(`${API}/plantas/${data.idPlanta}`, data, {})
       .then(async (response: any) => {
         console.log('response: ', response);
         const parse = this.dataService.parseData(response.data);
@@ -122,7 +123,7 @@ export class PlantsService {
   deletePlant(id) {
     return new Promise(resolve => {
       this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
-      this.http.delete(`${API}/plantas/${id}`, {}, {})
+      this.http.post(`${API}/plantas/${id}`, {_method: 'DELETE'}, {})
       .then(async (response: any) => {
         console.log('response: ', response);
         const parse = this.dataService.parseData(response.data);

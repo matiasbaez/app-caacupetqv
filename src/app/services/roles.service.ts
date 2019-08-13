@@ -52,9 +52,10 @@ export class RolesService {
   }
 
   updateRole(data: Role) {
+    data['_method'] = 'PUT';
     return new Promise(resolve => {
       this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
-      this.http.put(`${API}/roles/${data.idRole}`, data, {})
+      this.http.post(`${API}/roles/${data.idRole}`, data, {})
       .then(async (response: any) => {
         console.log('response: ', response);
         const parse = this.dataService.parseData(response.data);
@@ -74,7 +75,7 @@ export class RolesService {
   deleteRole(id) {
     return new Promise(resolve => {
       this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
-      this.http.delete(`${API}/roles/${id}`, {}, {})
+      this.http.post(`${API}/roles/${id}`, {_method: 'DELETE'}, {})
       .then(async (response: any) => {
         console.log('response: ', response);
         const parse = this.dataService.parseData(response.data);

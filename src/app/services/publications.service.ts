@@ -47,9 +47,10 @@ export class PublicationsService {
   }
 
   updatePublication(data: Publications) {
+    data['_method'] = 'PUT';
     return new Promise(resolve => {
       this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
-      this.http.put(`${API}/publicaciones/${data.idPublicacion}`, data, {})
+      this.http.post(`${API}/publicaciones/${data.idPublicacion}`, data, {})
       .then(async (response: any) => {
         console.log('response: ', response);
         const parse = this.dataService.parseData(response.data);
@@ -69,7 +70,7 @@ export class PublicationsService {
   deletePublication(id) {
     return new Promise(resolve => {
       this.http.setHeader('*', 'Authorization', `Bearer ${this.userService.token}`);
-      this.http.delete(`${API}/publicaciones/${id}`, {}, {})
+      this.http.post(`${API}/publicaciones/${id}`, {_method: 'DELETE'}, {})
       .then(async (response: any) => {
         console.log('response: ', response);
         const parse = this.dataService.parseData(response.data);

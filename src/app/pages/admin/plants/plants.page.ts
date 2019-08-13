@@ -142,13 +142,14 @@ export class PlantsPage implements OnInit {
     } else {
       message = 'Por vafor verifique los datos';
     }
-    // this.uiService.showToast(message);
+    this.uiService.showToast(message);
   }
 
   editPlant(plant) {
+    const ignore = ['created_at', 'updated_at', 'publicaciones'];
     // tslint:disable-next-line: forin
     for (const i in plant) {
-      if (i !== 'created_at' && i !== 'updated_at') {
+      if (ignore.indexOf(i) === -1) {
         this.angForm.controls[i].setValue(plant[i]);
       }
     }
