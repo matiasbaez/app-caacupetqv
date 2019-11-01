@@ -40,6 +40,7 @@ export class PlantsService {
       (entry as FileEntry).file(async (file) => await this.readFile(file, callback));
     })
     .catch(err => {
+      console.log('err: ', err);
       this.uiService.showToast('Ha ocurrido un error al leer el archivo.');
     });
   }
@@ -78,12 +79,11 @@ export class PlantsService {
 
   updatePlant(data: Plant) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders()
-        .append('Authorization', 'Bearer ' + this.userService.token);
+      const headers = new HttpHeaders().append('Authorization', 'Bearer ' + this.userService.token);
       this.http.put(`${API}/plantas/${data.idPlanta}`, data, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);
@@ -99,12 +99,11 @@ export class PlantsService {
 
   deletePlant(id) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders()
-        .append('Authorization', 'Bearer ' + this.userService.token);
+      const headers = new HttpHeaders().append('Authorization', 'Bearer ' + this.userService.token);
       this.http.delete(`${API}/plantas/${id}`, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);

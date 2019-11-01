@@ -1,5 +1,6 @@
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewChild } from '@angular/core';
+import { IonRefresher, IonInfiniteScroll } from '@ionic/angular';
 
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
@@ -27,6 +28,10 @@ export class PublicationsPage implements OnInit, OnChanges {
   update: boolean = false;
   user: User;
   loadingLocation: boolean = false;
+
+  @ViewChild('infiniteScroll') infScroll: IonInfiniteScroll;
+  @ViewChild('refresher') refresher: IonRefresher;
+
   public infScrollDisabled = false;
 
   constructor(
@@ -58,9 +63,14 @@ export class PublicationsPage implements OnInit, OnChanges {
       (response: any) => {
         this.publications.push(...response.data);
         if (event) {
+          event.target.disabled = true;
           event.target.complete();
 
           if (response.data.length === 0) { this.infScrollDisabled = true; }
+
+          setTimeout(() => {
+            event.target.disabled = false;
+          }, 100);
         }
       },
       (error) => { console.log('Error: ', error); }
@@ -194,6 +204,8 @@ export class PublicationsPage implements OnInit, OnChanges {
     } else {
       message = 'Por vafor verifique los datos';
     }
+    this.infScroll.disabled = false;
+    this.refresher.disabled = false;
     this.uiService.showToast(message);
   }
 
@@ -211,6 +223,8 @@ export class PublicationsPage implements OnInit, OnChanges {
     this.angForm.controls['imagen'].setValue(publication.planta.imagen);
     this.showForm = true;
     this.update = true;
+    this.infScroll.disabled = true;
+    this.refresher.disabled = true;
   }
 
   refresh(event) {
@@ -219,9 +233,17 @@ export class PublicationsPage implements OnInit, OnChanges {
     this.infScrollDisabled = false;
   }
 
+  addPublicationForm() {
+    this.showForm = true;
+    this.infScroll.disabled = true;
+    this.refresher.disabled = true;
+  }
+
   reset() {
     this.showForm = false;
     this.update = false;
+    this.infScroll.disabled = false;
+    this.refresher.disabled = false;
     this.createForm();
   }
 }

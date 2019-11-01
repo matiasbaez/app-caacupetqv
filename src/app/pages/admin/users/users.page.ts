@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IonInfiniteScroll, IonRefresher } from '@ionic/angular';
 import { User, Role } from '../../../interfaces/interfaces';
 import { UserService } from '../../../services/user.service';
 import { UIService } from '../../../services/ui.service';
@@ -18,6 +19,10 @@ export class UsersPage implements OnInit {
   roles: Role[] = [];
   showForm: boolean = false;
   update: boolean = false;
+
+  @ViewChild('infiniteScroll') infScroll: IonInfiniteScroll;
+  @ViewChild('refresher') refresher: IonRefresher;
+
   public infScrollDisabled = false;
 
   constructor(
@@ -52,9 +57,14 @@ export class UsersPage implements OnInit {
       (response: any) => {
         this.users.push(...response.data);
         if (event) {
+          event.target.disabled = true;
           event.target.complete();
 
           if (response.data.length === 0) { this.infScrollDisabled = true; }
+
+          setTimeout(() => {
+            event.target.disabled = false;
+          }, 100);
         }
       },
       (error) => {
@@ -100,6 +110,8 @@ export class UsersPage implements OnInit {
       } else {
         message = 'Ha ocurrido un problema, por favor intentelo más tarde';
       }
+      this.infScroll.disabled = false;
+      this.refresher.disabled = false;
       this.uiService.showToast(message);
     }
   }
@@ -116,6 +128,8 @@ export class UsersPage implements OnInit {
         message = 'Ha ocurrido un problema, por favor intentelo más tarde';
       }
     }
+    this.infScroll.disabled = false;
+    this.refresher.disabled = false;
     this.uiService.showToast(message);
   }
 
@@ -138,6 +152,8 @@ export class UsersPage implements OnInit {
     }
     this.showForm = true;
     this.update = true;
+    this.infScroll.disabled = true;
+    this.refresher.disabled = true;
   }
 
   refresh(event) {
@@ -146,9 +162,17 @@ export class UsersPage implements OnInit {
     this.infScrollDisabled = false;
   }
 
+  addUserForm() {
+    this.showForm = true;
+    this.infScroll.disabled = true;
+    this.refresher.disabled = true;
+  }
+
   reset() {
     this.showForm = false;
     this.update = false;
+    this.infScroll.disabled = false;
+    this.refresher.disabled = false;
     this.createForm();
   }
 

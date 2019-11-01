@@ -37,7 +37,7 @@ export class RolesService {
         .append('Authorization', 'Bearer ' + this.userService.token);
       this.http.post(`${API}/roles`, data, {headers}).subscribe(
         async (response: any) => {
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);
@@ -58,7 +58,7 @@ export class RolesService {
       this.http.put(`${API}/roles/${data.idRole}`, data, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);
@@ -79,7 +79,7 @@ export class RolesService {
       this.http.delete(`${API}/roles/${id}`, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);

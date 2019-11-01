@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Platform, IonRefresher, IonInfiniteScroll } from '@ionic/angular';
 import { Plant } from '../../interfaces/interfaces';
 import { environment } from '../../../environments/environment';
 import { PlantsService } from '../../services/plants.service';
@@ -16,6 +16,9 @@ export class HomePage implements OnInit {
   public loading = true;
   public infScrollDisabled = false;
   private subscription: any;
+
+  @ViewChild('infiniteScroll') infScroll: IonInfiniteScroll;
+  @ViewChild('refresher') refresher: IonRefresher;
 
   constructor(
     private plantsService: PlantsService,
@@ -51,22 +54,27 @@ export class HomePage implements OnInit {
   }
 
   loadData(event?, pull: boolean = false) {
-    console.log("loadData");
     this.plantsService.getPlants(pull).subscribe(
       (response: any) => {
         this.loading = false;
         this.plants.push(...response.data);
         if (event) {
+          event.target.disabled = true;
           event.target.complete();
 
-          console.log('length: ', response.data.length);
           if (response.data.length === 0) { this.infScrollDisabled = true; }
-          console.log('disabled: ', this.infScrollDisabled);
+
+          setTimeout(() => {
+            event.target.disabled = false;
+          }, 100);
         }
       },
       (error) => {
         console.log('Error: ', error);
         this.loading = false;
+        if (event) {
+          event.target.complete();
+        }
       }
     );
   }

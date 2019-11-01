@@ -31,7 +31,7 @@ export class PublicationsService {
         .append('Authorization', 'Bearer ' + this.userService.token);
       this.http.post(`${API}/publicaciones`, data, { headers }).subscribe(
         async (response: any) => {
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);
@@ -52,7 +52,7 @@ export class PublicationsService {
       this.http.put(`${API}/publicaciones/${data.idPublicacion}`, data, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);
@@ -73,7 +73,7 @@ export class PublicationsService {
       this.http.delete(`${API}/publicaciones/${id}`, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);

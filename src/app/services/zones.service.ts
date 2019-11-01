@@ -37,7 +37,7 @@ export class ZonesService {
         .append('Authorization', 'Bearer ' + this.userService.token);
       this.http.post(`${API}/zonas`, data, { headers }).subscribe(
         async (response: any) => {
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);
@@ -58,7 +58,7 @@ export class ZonesService {
       this.http.put(`${API}/zonas/${data.idZona}`, data, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);
@@ -79,7 +79,7 @@ export class ZonesService {
       this.http.delete(`${API}/zonas/${id}`, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
-          if (response === 200) {
+          if (response.success) {
             resolve(true);
           } else {
             resolve(false);

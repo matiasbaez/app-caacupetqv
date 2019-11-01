@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonInfiniteScroll, IonRefresher } from '@ionic/angular';
+
 import { PlantsService } from '../../../services/plants.service';
-import { Plant } from '../../../interfaces/interfaces';
 import { UIService } from '../../../services/ui.service';
+import { Plant } from '../../../interfaces/interfaces';
 
 declare var window: any;
 
@@ -18,6 +20,10 @@ export class PlantsPage implements OnInit {
   plants: Plant[] = [];
   showForm: boolean = false;
   update: boolean = false;
+
+  @ViewChild('infiniteScroll') infScroll: IonInfiniteScroll;
+  @ViewChild('refresher') refresher: IonRefresher;
+
   public infScrollDisabled = false;
 
   constructor(
@@ -43,6 +49,7 @@ export class PlantsPage implements OnInit {
       descripcion: [''],
       imagen: ['', Validators.required],
       imageUrl: [''],
+      publicaciones: [''],
       estado: ['']
     });
   }
@@ -52,9 +59,14 @@ export class PlantsPage implements OnInit {
       (response: any) => {
         this.plants.push(...response.data);
         if (event) {
+          event.target.disabled = true;
           event.target.complete();
 
           if (response.data.length === 0) { this.infScrollDisabled = true; }
+
+          setTimeout(() => {
+            event.target.disabled = false;
+          }, 100);
         }
       },
       (error) => {
@@ -109,7 +121,7 @@ export class PlantsPage implements OnInit {
       const img = window.Ionic.WebView.convertFileSrc(imageData);
       // console.log('path: ', img);
       console.log('imageData: ', imageData);
-      this.angForm.controls['imagen'].setValue(img);
+      this.angForm.controls['imagen'].setValue(imageData);
       this.angForm.controls['imageUrl'].setValue(img);
     }, (err) => {
       // Handle error
@@ -149,6 +161,8 @@ export class PlantsPage implements OnInit {
     } else {
       message = 'Por vafor verifique los datos';
     }
+    this.infScroll.disabled = false;
+    this.refresher.disabled = false;
     this.uiService.showToast(message);
   }
 
@@ -161,17 +175,27 @@ export class PlantsPage implements OnInit {
     }
     this.showForm = true;
     this.update = true;
+    this.infScroll.disabled = true;
+    this.refresher.disabled = true;
   }
 
   refresh(event) {
     this.getPlants(event, true);
     this.plants = [];
-    this.infScrollDisabled = false;
+    this.infScrollDisabled = true;
+  }
+
+  addPlantForm() {
+    this.showForm = true;
+    this.infScroll.disabled = true;
+    this.refresher.disabled = true;
   }
 
   reset() {
     this.showForm = false;
     this.update = false;
+    this.infScroll.disabled = false;
+    this.refresher.disabled = false;
     this.createForm();
   }
 }

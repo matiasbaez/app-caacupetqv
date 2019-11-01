@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IonInfiniteScroll, IonRefresher } from '@ionic/angular';
 import { Zone } from '../../../interfaces/interfaces';
 import { UIService } from '../../../services/ui.service';
 import { ZonesService } from '../../../services/zones.service';
@@ -16,6 +17,10 @@ export class ZonesPage implements OnInit {
   zones: Zone[] = [];
   showForm: boolean = false;
   update: boolean = false;
+
+  @ViewChild('infiniteScroll') infScroll: IonInfiniteScroll;
+  @ViewChild('refresher') refresher: IonRefresher;
+
   public infScrollDisabled = false;
 
   constructor(
@@ -43,9 +48,14 @@ export class ZonesPage implements OnInit {
       (response: any) => {
         this.zones.push(...response.data);
         if (event) {
+          event.target.disabled = true;
           event.target.complete();
 
           if (response.data.length === 0) { this.infScrollDisabled = true; }
+
+          setTimeout(() => {
+            event.target.disabled = false;
+          }, 100);
         }
       },
       (error) => {
@@ -92,6 +102,8 @@ export class ZonesPage implements OnInit {
     } else {
       message = 'Por vafor verifique los datos';
     }
+    this.infScroll.disabled = false;
+    this.refresher.disabled = false;
     this.uiService.showToast(message);
   }
 
@@ -104,6 +116,8 @@ export class ZonesPage implements OnInit {
     }
     this.showForm = true;
     this.update = true;
+    this.infScroll.disabled = true;
+    this.refresher.disabled = true;
   }
 
   refresh(event) {
@@ -112,9 +126,17 @@ export class ZonesPage implements OnInit {
     this.infScrollDisabled = false;
   }
 
+  addZoneForm() {
+    this.showForm = true;
+    this.infScroll.disabled = true;
+    this.refresher.disabled = true;
+  }
+
   reset() {
     this.showForm = false;
     this.update = false;
+    this.infScroll.disabled = false;
+    this.refresher.disabled = false;
     this.createForm();
   }
 

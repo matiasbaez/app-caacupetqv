@@ -7,7 +7,7 @@
 <ion-content padding>
 
   <!-- Refresher -->
-  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)" #refresher>
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
@@ -55,7 +55,7 @@
     <ion-row>
       <ion-col>
         <ion-card>
-          <img *ngIf="angForm.value.imagen && angForm.value.imageUrl" [src]="angForm.value.imagen">
+          <img *ngIf="angForm.value.imagen && angForm.value.imageUrl" [src]="angForm.value.imageUrl">
           <img *ngIf="angForm.value.imagen && !angForm.value.imageUrl" [src]="(angForm.value.imagen | absolutize) | urlSanitizer">
         </ion-card>
       </ion-col>
@@ -70,7 +70,7 @@
   </form>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="showForm = true" *ngIf="!showForm">
+    <ion-fab-button (click)="addPlantForm()" *ngIf="!showForm">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
     <ion-fab-button (click)="reset()" *ngIf="showForm">
@@ -79,7 +79,7 @@
   </ion-fab>
 
   <!-- Infinite Scroll -->
-  <ion-infinite-scroll [disabled]="infScrollDisabled" threshold="150px" (ionInfinite)="getPlants($event)">
+  <ion-infinite-scroll [disabled]="infScrollDisabled" threshold="150px" (ionInfinite)="getPlants($event)" #infiniteScroll>
     <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

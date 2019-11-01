@@ -29,7 +29,7 @@ export class TabsPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-    // this.logged = await this.userService.validateToken();
+    this.logged = await this.userService.providerTokenValidation();
   }
 
   loginPage() {

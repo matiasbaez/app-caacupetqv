@@ -7,7 +7,7 @@
 <ion-content padding>
 
   <!-- Refresher -->
-  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)" #refresher>
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
@@ -52,7 +52,7 @@
   </form>
   
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="showForm = true" *ngIf="!showForm">
+    <ion-fab-button (click)="addRoleForm()" *ngIf="!showForm">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
     <ion-fab-button (click)="reset()" *ngIf="showForm">
@@ -61,7 +61,7 @@
   </ion-fab>
 
   <!-- Infinite Scroll -->
-  <ion-infinite-scroll [disabled]="infScrollDisabled" threshold="150px" (ionInfinite)="getRoles($event)">
+  <ion-infinite-scroll [disabled]="infScrollDisabled" threshold="150px" (ionInfinite)="getRoles($event)" #infiniteScroll>
     <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Cargando...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
