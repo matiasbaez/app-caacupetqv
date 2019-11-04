@@ -50,10 +50,13 @@ export class PublicationsPage implements OnInit, OnChanges {
 
   async ngOnInit() {
     this.user = this.userService.getUser();
-    await this.getPublications();
-    await this.getPlants();
-    await this.getZones();
+    await this.getPublications(null, true);
+    await this.getPlants(true);
+    await this.getZones(true);
     this.angForm.controls['idUsuario'].setValue(this.user.id);
+    this.publicationsService.newPublication.subscribe(publication => {
+      this.publications.unshift(publication);
+    });
   }
 
   ngOnChanges() {}
@@ -77,8 +80,8 @@ export class PublicationsPage implements OnInit, OnChanges {
     );
   }
 
-  getPlants() {
-    this.plantsService.getPlants().subscribe(
+  getPlants(pull?) {
+    this.plantsService.getPlants(pull).subscribe(
       (response: any) => {
         this.plants = response.data;
       },
@@ -86,8 +89,8 @@ export class PublicationsPage implements OnInit, OnChanges {
     );
   }
 
-  getZones() {
-    this.zonesService.getZones().subscribe(
+  getZones(pull?) {
+    this.zonesService.getZones(pull).subscribe(
       (response: any) => {
         this.zones = response.data;
       },
@@ -99,9 +102,9 @@ export class PublicationsPage implements OnInit, OnChanges {
     this.angForm = this.fb.group({
       idPublicacion: [''],
       idUsuario: ['', Validators.required],
-      idPlanta: ['', Validators.required],
-      idZona: ['', Validators.required],
-      descripcion: [''],
+      planta: ['', Validators.required],
+      zona: ['', Validators.required],
+      descripcion: ['', Validators.required],
       getPosition: [false],
       latLng: [''],
       estado: [''],
@@ -109,15 +112,35 @@ export class PublicationsPage implements OnInit, OnChanges {
     });
   }
 
-  onSearchChange(event) { }
+  onSearchChange(event) {
+    if (event.detail.value !== '') {
+      if (event.detail.value.length >= 3) {
+        this.publicationsService.searchBy(event.detail.value).subscribe(
+          (response: any) => {
+            console.log('response: ', response);
+            this.publications = response.data;
+          },
+          (error) => {
+            console.log('Error: ', error);
+          }
+        );
+      }
+    } else { this.publications = []; this.getPublications(null, true); }
+  }
 
   updateImage(event) {
-    console.log("event: ", event);
+    console.log('event: ', event);
     this.plants.forEach(plant => {
       if (plant.idPlanta === event) {
         this.angForm.controls['imagen'].setValue(plant.imagen);
       }
     });
+  }
+
+  selectableChange(event) {
+    // console.log('event: ', event, event.component.itemValueField);
+    // const field = event.component.itemValueField;
+    // this.angForm.controls[field].setValue(event.value[field]);
   }
 
   onToggleLocation() {
@@ -188,6 +211,8 @@ export class PublicationsPage implements OnInit, OnChanges {
         const updated = await this.publicationsService.updatePublication(this.angForm.value);
         if (updated) {
           message = 'Tu plantación ha sido actualizado correctamente';
+          this.publications = [];
+          await this.getPublications(null, true);
           this.reset();
         } else {
           message = 'Ha ocurrido un problema, por favor intentelo más tarde';
@@ -218,8 +243,8 @@ export class PublicationsPage implements OnInit, OnChanges {
       }
     }
     this.angForm.controls['idUsuario'].setValue(publication.usuario.id);
-    this.angForm.controls['idPlanta'].setValue(publication.planta.idPlanta);
-    this.angForm.controls['idZona'].setValue(publication.zona.idZona);
+    this.angForm.controls['planta'].setValue(publication.planta);
+    this.angForm.controls['zona'].setValue(publication.zona);
     this.angForm.controls['imagen'].setValue(publication.planta.imagen);
     this.showForm = true;
     this.update = true;
@@ -245,5 +270,6 @@ export class PublicationsPage implements OnInit, OnChanges {
     this.infScroll.disabled = false;
     this.refresher.disabled = false;
     this.createForm();
+    this.angForm.controls['idUsuario'].setValue(this.user.id);
   }
 }

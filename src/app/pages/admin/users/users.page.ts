@@ -96,7 +96,7 @@ export class UsersPage implements OnInit {
           }
         );
       }
-    } else { this.getUsers(); }
+    } else { this.users = []; this.getUsers(); }
   }
 
   async onSubmitCreate() {

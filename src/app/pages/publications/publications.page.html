@@ -27,16 +27,20 @@
 
         <ion-item>
             <ion-label>Planta</ion-label>
-            <ion-select placeholder="Seleccione una planta" formControlName="idPlanta" interface="action-sheet" (ionChange)="updateImage(angForm.value.idPlanta)">
-                <ion-select-option *ngFor="let plant of plants" [value]="plant.idPlanta">{{plant.nombre}}</ion-select-option>
-            </ion-select>
+            <ionic-selectable placeholder="Seleccione una planta"
+                formControlName="planta" [items]="plants" itemValueField="idPlanta"
+                itemTextField="nombre" [canSearch]="true" (onChange)="selectableChange($event)"
+                searchPlaceholder="Buscar Planta" searchFailText="No se encontraron plantas">
+            </ionic-selectable>
         </ion-item>
 
         <ion-item>
             <ion-label>Zona</ion-label>
-            <ion-select placeholder="Seleccione una zona" formControlName="idZona" interface="action-sheet">
-                <ion-select-option *ngFor="let zone of zones" [value]="zone.idZona">{{zone.nombre}}</ion-select-option>
-            </ion-select>
+            <ionic-selectable placeholder="Seleccione una zona"
+                formControlName="zona" [items]="zones" itemValueField="idZona"
+                itemTextField="nombre" [canSearch]="true" (onChange)="selectableChange($event)"
+                searchPlaceholder="Buscar Zona" searchFailText="No se encontraron zonas">
+            </ionic-selectable>
         </ion-item>
 
         <ion-item>

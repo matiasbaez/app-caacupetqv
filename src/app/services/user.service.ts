@@ -29,7 +29,7 @@ export class UserService {
   ) {}
 
   searchByName(name: string) {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.token);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     const params = new HttpParams().append('name', name);
     return this.http.get<User>(`${API}/search/usuarios`, { headers, params });
   }
@@ -126,7 +126,7 @@ export class UserService {
   getUserList(pull: boolean = false) {
     if (pull) { this.page = 0; }
     this.page++;
-    const headers = new HttpHeaders().set('Authorization', 'Bearer' + this.token);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.get<User>(`${API}/user/list?page=${this.page}`, {headers});
   }
 
@@ -147,10 +147,10 @@ export class UserService {
   }
 
   deleteUser(userId) {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer' + this.token);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return new Promise(resolve => {
-			this.http.delete(`${API}/user/${userId}`, { headers })
-			.subscribe(response => {
+      this.http.delete(`${API}/user/${userId}`, { headers })
+      .subscribe(response => {
         console.log('response: ', response);
         if (response === 200) {
           resolve(true);
@@ -261,7 +261,7 @@ export class UserService {
     return new Promise<boolean>(resolve => {
       const headers = new HttpHeaders()
         .set('Content-Type', 'application/json')
-        .set('Authorization', 'Bearer ' + this.token);
+        .set('Authorization', `Bearer ${this.token}`);
       this.http.get(`${API}/user`, { headers }).subscribe(
         (response: any) => {
           console.log('response: ', response);

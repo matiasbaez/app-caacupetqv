@@ -56,9 +56,31 @@ export class PlantsService {
     reader.readAsArrayBuffer(file);
   }
 
+  uploadImage(image: string) {
+    return new Promise(resolve => {
+      const headers = new HttpHeaders().append('Authorization', `Bearer ${this.userService.token}`);
+      this.readImage(image, (formData) => {
+        this.http.post(`${API}/upload`, formData, { headers }).subscribe(
+          async (response: any) => {
+            console.log('response: ', response);
+            if (response.success) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          },
+          (error) => {
+            console.log('Error: ', error);
+            resolve(false);
+          }
+        );
+      });
+    });
+  }
+
   addPlant(formData: FormData) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders().append('Authorization', 'Bearer ' + this.userService.token);
+      const headers = new HttpHeaders().append('Authorization', `Bearer ${this.userService.token}`);
       this.http.post(`${API}/plantas`, formData, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
@@ -79,7 +101,7 @@ export class PlantsService {
 
   updatePlant(data: Plant) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders().append('Authorization', 'Bearer ' + this.userService.token);
+      const headers = new HttpHeaders().append('Authorization', `Bearer ${this.userService.token}`);
       this.http.put(`${API}/plantas/${data.idPlanta}`, data, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);
@@ -99,7 +121,7 @@ export class PlantsService {
 
   deletePlant(id) {
     return new Promise(resolve => {
-      const headers = new HttpHeaders().append('Authorization', 'Bearer ' + this.userService.token);
+      const headers = new HttpHeaders().append('Authorization', `Bearer ${this.userService.token}`);
       this.http.delete(`${API}/plantas/${id}`, { headers }).subscribe(
         async (response: any) => {
           console.log('response: ', response);

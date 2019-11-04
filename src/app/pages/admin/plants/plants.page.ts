@@ -87,7 +87,7 @@ export class PlantsPage implements OnInit {
           }
         );
       }
-    } else { this.getPlants(); }
+    } else { this.plants = []; this.getPlants(null, true); }
   }
 
   openCamera() {
@@ -117,12 +117,17 @@ export class PlantsPage implements OnInit {
   }
 
   processImage(options: CameraOptions) {
-    this.camera.getPicture(options).then((imageData) => {
+    this.camera.getPicture(options).then(async (imageData) => {
       const img = window.Ionic.WebView.convertFileSrc(imageData);
       // console.log('path: ', img);
       console.log('imageData: ', imageData);
       this.angForm.controls['imagen'].setValue(imageData);
       this.angForm.controls['imageUrl'].setValue(img);
+      this.angForm.controls.imagen.setErrors({pending: true});
+      const upload = await this.plantsService.uploadImage(imageData);
+      if (upload) {
+        this.angForm.controls.imagen.setErrors(null);
+      }
     }, (err) => {
       // Handle error
     });
@@ -140,23 +145,13 @@ export class PlantsPage implements OnInit {
           message = 'Ha ocurrido un problema, por favor intentelo más tarde';
         }
       } else {
-        console.log('imagen: ', this.angForm.value.imagen);
-        await this.plantsService.readImage(this.angForm.value.imagen, async (result) => {
-          console.log('result: ', result, result.values());
-          const formData = result;
-          for (const i in this.angForm.value) {
-            if (i !== 'imagen' && i !== 'imageUrl' && this.angForm.value[i]) {
-              formData.append(i, this.angForm.value[i]);
-            }
-          }
-          const saved = await this.plantsService.addPlant(formData);
-          if (saved) {
-            message = 'La planta ha sido agregada correctamente';
-            this.reset();
-          } else {
-            message = 'Ha ocurrido un problema, por favor intentelo más tarde';
-          }
-        });
+        const saved = await this.plantsService.addPlant(this.angForm.value);
+        if (saved) {
+          message = 'La planta ha sido agregada correctamente';
+          this.reset();
+        } else {
+          message = 'Ha ocurrido un problema, por favor intentelo más tarde';
+        }
       }
     } else {
       message = 'Por vafor verifique los datos';

@@ -32,7 +32,10 @@ export class ZonesPage implements OnInit {
   }
 
   ngOnInit() {
-    this.getZones();
+    this.getZones(null, true);
+    this.zonesService.newZone.subscribe(zone => {
+      this.zones.unshift(zone);
+    });
   }
 
   createForm() {
@@ -76,7 +79,7 @@ export class ZonesPage implements OnInit {
           }
         );
       }
-    } else { this.getZones(null, true); }
+    } else { this.zones = []; this.getZones(null, true); }
   }
 
   async onSubmit() {

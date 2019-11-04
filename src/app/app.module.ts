@@ -12,6 +12,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { IonicSelectableModule } from 'ionic-selectable';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { HTTP } from '@ionic-native/http/ngx';
@@ -37,7 +38,8 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
     HttpClientModule,
     ComponentsModule,
-    PipesModule
+    PipesModule,
+    IonicSelectableModule
   ],
   providers: [
     File,

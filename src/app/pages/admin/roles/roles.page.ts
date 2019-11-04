@@ -32,7 +32,10 @@ export class RolesPage implements OnInit {
   }
 
   ngOnInit() {
-    this.getRoles();
+    this.getRoles(null, true);
+    this.rolesService.newRole.subscribe(role => {
+      this.roles.unshift(role);
+    });
   }
 
   createForm() {
@@ -77,7 +80,7 @@ export class RolesPage implements OnInit {
           }
         );
       }
-    } else { this.getRoles(null, true); }
+    } else { this.roles = []; this.getRoles(null, true); }
   }
 
   async onSubmit() {
