@@ -269,6 +269,7 @@ export class UserService {
             this.user = response.user;
             resolve(true);
           } else {
+            this.navCtrl.navigateRoot('/main/home', { animated: true });
             resolve(false);
           }
         }

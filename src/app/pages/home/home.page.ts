@@ -17,8 +17,8 @@ export class HomePage implements OnInit {
   public infScrollDisabled = false;
   private subscription: any;
 
-  @ViewChild('infiniteScroll') infScroll: IonInfiniteScroll;
-  @ViewChild('refresher') refresher: IonRefresher;
+  @ViewChild('infiniteScroll', {static: false}) infScroll: IonInfiniteScroll;
+  @ViewChild('refresher', {static: false}) refresher: IonRefresher;
 
   constructor(
     private plantsService: PlantsService,

@@ -29,8 +29,8 @@ export class PublicationsPage implements OnInit, OnChanges {
   user: User;
   loadingLocation: boolean = false;
 
-  @ViewChild('infiniteScroll') infScroll: IonInfiniteScroll;
-  @ViewChild('refresher') refresher: IonRefresher;
+  @ViewChild('infiniteScroll', {static: false}) infScroll: IonInfiniteScroll;
+  @ViewChild('refresher', {static: false}) refresher: IonRefresher;
 
   public infScrollDisabled = false;
 

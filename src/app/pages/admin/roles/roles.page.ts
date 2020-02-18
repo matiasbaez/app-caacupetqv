@@ -18,8 +18,8 @@ export class RolesPage implements OnInit {
   showForm: boolean = false;
   update: boolean = false;
 
-  @ViewChild('infiniteScroll') infScroll: IonInfiniteScroll;
-  @ViewChild('refresher') refresher: IonRefresher;
+  @ViewChild('infiniteScroll', {static: false}) infScroll: IonInfiniteScroll;
+  @ViewChild('refresher', {static: false}) refresher: IonRefresher;
 
   public infScrollDisabled = false;
 

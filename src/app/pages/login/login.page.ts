@@ -14,7 +14,7 @@ export class LoginPage implements OnInit {
 
   angFormLogin: FormGroup;
   angFormRegister: FormGroup;
-  @ViewChild('slide') slide: IonSlides;
+  @ViewChild('slide', { static: false }) slide: IonSlides;
   slideOpts = {
     allowSlidePrev: false,
     allowSlideNext: false
